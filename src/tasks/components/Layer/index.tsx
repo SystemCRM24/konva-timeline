@@ -106,7 +106,6 @@ const TasksLayer: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip, create, 
         if (xCoordinate > drawRange.end || xCoordinate + width < drawRange.start) {
           return null;
         }
-
         return (
           <Task
             key={`task-${taskData.id}`}

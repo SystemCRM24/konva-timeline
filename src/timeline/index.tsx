@@ -289,6 +289,7 @@ const Timeline: FC<TimelineProps> = () => {
         const stage = e.target.getStage();
         stage!.container().style.cursor = "crosshair";
         const xpos = stage!.getPointerPosition()!.x + drawRange.start;
+        // console.log(xpos);
         const width = xpos - startXClick;
         let controlledX = startXClick;
         const controlledWidth = width < 0 ? -1 * width : width;

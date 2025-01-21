@@ -1,3 +1,5 @@
+// Отвечает за отображение полосок и текста на ганте.
+
 import React, { memo, useMemo } from "react";
 
 import { KonvaGroup } from "../../@konva";
@@ -49,9 +51,19 @@ const GridCells = ({ height }: GridCellsProps) => {
     () => getAboveTimeBlocksVisible(visibleTimeBlocks, aboveTimeBlocks, startUnitAbove, endUnitAbove, arrayIndex),
     [visibleTimeBlocks, aboveTimeBlocks, startUnitAbove, endUnitAbove, arrayIndex]
   );
+
+  // const predicate = (item: Interval) => {
+  //     if ( item.s.c.hour < 9 || item.s.c.hour >= 18) {
+  //         return false;
+  //     }
+  //     return true;
+  // }
   return (
     <KonvaGroup>
       {aboveTimeBlocksVisible.map((column, index) => {
+        // if ( column.s.c.hour < 9 || column.s.c.hour >= 18) {
+        //   return;
+        // }
         return (
           <GridCellGroup
             key={`cell-group-${index}`}
@@ -62,15 +74,20 @@ const GridCells = ({ height }: GridCellsProps) => {
           />
         );
       })}
-      {visibleTimeBlocks.map((column, index) => (
-        <GridCell
-          key={`cell-${index}`}
-          column={column}
-          height={height}
-          index={index}
-          hourInfo={visibileHourInfo[index]}
-        />
-      ))}
+      {visibleTimeBlocks.map((column, index) => {
+        // if ( column.s.c.hour < 9 || column.s.c.hour >= 18) {
+        //   return;
+        // }
+        return (
+          <GridCell
+            key={`cell-${index}`}
+            column={column}
+            height={height}
+            index={index}
+            hourInfo={visibileHourInfo[index]}
+          />
+        );
+      })}
     </KonvaGroup>
   );
 };

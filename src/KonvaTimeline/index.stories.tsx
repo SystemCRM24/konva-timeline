@@ -98,6 +98,7 @@ export const CustomHeaderLabel: Story = {
   args: {
     ...Primary.args,
     headerLabel: "Test",
+    columnWidth: 6,
   },
 };
 

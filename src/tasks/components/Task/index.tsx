@@ -257,6 +257,7 @@ const Task = ({
       const resourceIndex = findResourceIndexByCoordinate(y, rowHeight, resources);
       const yCoordinate = getTaskYCoordinate(resourceIndex, rowHeight);
       const point = { x: xCoordinate, y: yCoordinate };
+
       setDragging(true);
       ///ToolTip disappears
       onLeave(taskId, point);
