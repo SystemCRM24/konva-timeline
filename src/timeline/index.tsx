@@ -23,6 +23,9 @@ import { logDebug } from "../utils/logger";
 
 import { useTimelineContext } from "./TimelineContext";
 
+import WorkTime from "../utils/workInterval/main";
+
+
 interface TimelineProps {}
 
 interface StageSize {
@@ -123,7 +126,6 @@ const Timeline: FC<TimelineProps> = () => {
     if (!wrapper.current || !initialDateTime) {
       return;
     }
-
     const timeStart = DateTime.fromMillis(initialDateTime);
     const startOffsetInUnit = timeStart.diff(interval.start!).as(resolution.unit);
     wrapper.current.scrollTo({ left: (startOffsetInUnit * columnWidth) / resolution.sizeInUnits });
@@ -197,17 +199,45 @@ const Timeline: FC<TimelineProps> = () => {
     return true;
   }, [externalRangeInMillis, interval]);
 
-  const xOfStart = useMemo(() => {
-    const timeStart = DateTime.fromMillis(externalRangeInMillis.start);
-    const startOffsetInUnit = timeStart.diff(interval.start!).as(resolution.unit);
-    return (startOffsetInUnit * columnWidth) / resolution.sizeInUnits;
-  }, [externalRangeInMillis, columnWidth, resolution, interval]);
+  // Расчет координаты для начала сетки координат
+  const xOfStart = useMemo(
+    () => {
+      const timeStart = DateTime.fromMillis(externalRangeInMillis.start);
+      let startOffsetInUnit = timeStart.diff(interval.start!);
+      // console.log(startOffsetInUnit);
+      // WorkTime logic
+      // startOffsetInUnit = startOffsetInUnit.plus(
+      //   WorkTime.calcNonWorkDuration(
+      //     WorkTime.edgeInterval.start!,
+      //     interval.start!
+      //   )
+      // );
+      // Back to main
+      console.log(startOffsetInUnit);
+      const res = (startOffsetInUnit.as(resolution.unit) * columnWidth) / resolution.sizeInUnits;
+      return res;
+    }, 
+    [externalRangeInMillis, columnWidth, resolution, interval]
+  );
 
-  const xOfEnd = useMemo(() => {
-    const timeStart = DateTime.fromMillis(externalRangeInMillis.end);
-    const startOffsetInUnit = timeStart.diff(interval.start!).as(resolution.unit);
-    return (startOffsetInUnit * columnWidth) / resolution.sizeInUnits;
-  }, [externalRangeInMillis, columnWidth, resolution, interval]);
+  // Расчет координат для визуального окончания сетки дат
+  const xOfEnd = useMemo(
+    () => {
+      const timeEnd = DateTime.fromMillis(externalRangeInMillis.end);
+      let endOffsetInUnit = timeEnd.diff(interval.start!);
+      // WorkTime logic
+      endOffsetInUnit = endOffsetInUnit.minus(
+        WorkTime.calcNonWorkDuration(
+          interval.end!,
+          interval.start!,
+        )
+      );
+      // Back to main
+      const res = (endOffsetInUnit.as(resolution.unit) * columnWidth) / resolution.sizeInUnits;
+      return res;
+    }, 
+    [externalRangeInMillis, columnWidth, resolution, interval]
+  );
 
   const endOffset = useMemo(() => {
     return fullTimelineWidth - xOfEnd;
@@ -289,7 +319,6 @@ const Timeline: FC<TimelineProps> = () => {
         const stage = e.target.getStage();
         stage!.container().style.cursor = "crosshair";
         const xpos = stage!.getPointerPosition()!.x + drawRange.start;
-        // console.log(xpos);
         const width = xpos - startXClick;
         let controlledX = startXClick;
         const controlledWidth = width < 0 ? -1 * width : width;

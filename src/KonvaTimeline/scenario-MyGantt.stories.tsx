@@ -39,10 +39,10 @@ export const Line: Story = {
     toolTip: true,
     displayTasksLabel: true,
     onTaskClick: (task) => task,
-    initialDateTime: "2025-01-10T12:00:00+03:00",
+    initialDateTime: "2025-01-13T13:00:00+03:00",
     range: {
-      start: "2025-01-13T00:00:00+03:00",
-      end: "2025-01-19T23:59:59+03:00",
+      start: "2025-01-06T00:00:00+03:00",
+      end: "2025-01-26T23:59:59+03:00",
     },
     tasks: [
       {
@@ -87,7 +87,7 @@ export const Line: Story = {
         resourceId: "3",
         time: {
           start: "2025-01-13T09:00:00+03:00",
-          end: "2025-01-16T16:00:00+03:00",
+          end: "2025-01-15T18:00:00+03:00",
         },
       },
     ],

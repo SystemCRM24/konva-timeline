@@ -10,6 +10,8 @@ import { getTaskYCoordinate, TASK_HEIGHT_OFFSET } from "../../utils/tasks";
 import LineKonva from "../Line";
 import TaskLine from "../TaskLine";
 import TaskTooltip, { TaskTooltipProps } from "../Tooltip";
+import WorkTime from "../../../utils/workInterval/main";
+
 
 interface TasksLayerProps {
   taskTooltip: TaskTooltipProps | null;
@@ -63,8 +65,11 @@ const LayerLine: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip, create, o
   const getTaskXCoordinate = useCallback(
     (startTime: number) => {
       const timeStart = DateTime.fromMillis(startTime);
-      const startOffsetInUnit = timeStart.diff(intervalStart!).as(resolution.unit);
-      return getXCoordinate(startOffsetInUnit);
+      // WorkTime logic
+      const nonWorkTimeDiff = WorkTime.calcOuterNonWorkDuration(timeStart, resolution.unit);
+      const startOffsetInUnit = timeStart.diff(intervalStart!).minus(nonWorkTimeDiff).as(resolution.unit);
+      const res = getXCoordinate(startOffsetInUnit);
+      return res;
     },
     [getXCoordinate, intervalStart, resolution.unit]
   );
@@ -73,8 +78,11 @@ const LayerLine: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip, create, o
     ({ start, end }: InternalTimeRange) => {
       const timeStart = DateTime.fromMillis(start);
       const timeEnd = DateTime.fromMillis(end);
-      const widthOffsetInUnit = timeEnd.diff(timeStart).as(resolution.unit);
-      return getXCoordinate(widthOffsetInUnit);
+      const widthOffsetInUnit = timeEnd.diff(timeStart);
+      // WorkTime logic
+      const nonWorkTimeDiff = WorkTime.calcNonWorkDuration(timeEnd, timeStart);
+      const result = widthOffsetInUnit.minus(nonWorkTimeDiff).as(resolution.unit);
+      return getXCoordinate(result);
     },
     [getXCoordinate, resolution]
   );
@@ -131,7 +139,6 @@ const LayerLine: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip, create, o
         if (xCoordinate > drawRange.end || xCoordinate + width < drawRange.start) {
           return null;
         }
-
         return (
           <TaskLine
             key={`task-${taskData.id}`}

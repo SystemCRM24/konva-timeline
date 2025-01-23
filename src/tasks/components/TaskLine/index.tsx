@@ -22,6 +22,9 @@ import {
 import LineKonva from "../Line";
 import TaskResizeHandle from "../TaskResizeHandle";
 
+// import WorkTime from "../../../utils/workInterval/main";
+
+
 type TaskMouseEventHandler = (taskId: string, point: KonvaPoint) => void;
 
 type TaskProps = KonvaDrawable &
@@ -159,12 +162,14 @@ const TaskLine = ({
 
   const [taskDimensions, setTaskDimensions] = useState(initialTaskDimensions);
 
+  // Отвечает за финальную точку, куда можно утащить полоску с задачей.
   const finalPoint = useMemo(() => {
     const timeStart = DateTime.fromMillis(externalRangeInMillis.end);
     const startOffsetInUnit = timeStart.diff(interval.start!).as(resolution.unit);
     return (startOffsetInUnit * columnWidth) / resolution.sizeInUnits;
   }, [externalRangeInMillis, columnWidth, resolution, interval]);
 
+  // Отвечает за начальные ограничения, куда можно утащить полоску с задачей.
   const startPoint = useMemo(() => {
     const timeStart = DateTime.fromMillis(externalRangeInMillis.start);
     const startOffsetInUnit = timeStart.diff(interval.start!).as(resolution.unit);

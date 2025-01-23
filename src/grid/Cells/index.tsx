@@ -8,6 +8,9 @@ import { getAboveTimeBlocksVisible, getDaysNumberOfMonths, getTimeBlocksTzInfo }
 import GridCell from "../Cell";
 import GridCellGroup from "../CellGroup";
 
+// import { intervalFilter } from "../../utils/workInterval/main";
+
+
 interface GridCellsProps {
   height: number;
 }
@@ -51,7 +54,6 @@ const GridCells = ({ height }: GridCellsProps) => {
     () => getAboveTimeBlocksVisible(visibleTimeBlocks, aboveTimeBlocks, startUnitAbove, endUnitAbove, arrayIndex),
     [visibleTimeBlocks, aboveTimeBlocks, startUnitAbove, endUnitAbove, arrayIndex]
   );
-
   // const predicate = (item: Interval) => {
   //     if ( item.s.c.hour < 9 || item.s.c.hour >= 18) {
   //         return false;
@@ -61,9 +63,8 @@ const GridCells = ({ height }: GridCellsProps) => {
   return (
     <KonvaGroup>
       {aboveTimeBlocksVisible.map((column, index) => {
-        // if ( column.s.c.hour < 9 || column.s.c.hour >= 18) {
-        //   return;
-        // }
+        // Эта часть отвечает за отображение информации над временными блоками - самая верхняя часть шкалы времени.
+        // Т.е. это номер недели, номер дня в календаре, час и тп.
         return (
           <GridCellGroup
             key={`cell-group-${index}`}
@@ -75,9 +76,6 @@ const GridCells = ({ height }: GridCellsProps) => {
         );
       })}
       {visibleTimeBlocks.map((column, index) => {
-        // if ( column.s.c.hour < 9 || column.s.c.hour >= 18) {
-        //   return;
-        // }
         return (
           <GridCell
             key={`cell-${index}`}

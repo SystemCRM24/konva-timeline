@@ -8,6 +8,7 @@ import { KonvaPoint } from "../../../utils/konva";
 import { TaskData } from "../../utils/tasks";
 
 import DefaultToolTip from "./DefaultToolTip";
+import WorkTime from "../../../utils/workInterval/main";
 
 export interface TaskTooltipProps extends KonvaPoint {
   task: TaskData;
@@ -44,19 +45,31 @@ const TaskTooltip: FC<TaskTooltipProps> = ({ task, x, y }) => {
     return completedPercentage + "%";
   }, [completedPercentage]);
 
-  const duration = useMemo(() => {
-    const part = Number(end) - Number(start);
-    if (part < sevenHourinMillis) {
-      const min = Duration.fromObject({ ["millisecond"]: part }).as("minute");
-      return { time: Math.round(min * 10) / 10, unit: "min" };
-    }
-    if (part < twoDayinMillis) {
-      const hour = Duration.fromObject({ ["millisecond"]: part }).as("hour");
-      return { time: Math.round(hour * 10) / 10, unit: "hour" };
-    }
-    const day = Duration.fromObject({ ["millisecond"]: part }).as("day");
-    return { time: Math.round(day * 10) / 10, unit: "Day" };
-  }, [start, end]);
+  const duration = useMemo(
+    () => {
+      // WorkTime logic
+      // const part = Number(end) - Number(start);
+      const part = (
+        WorkTime
+        .calcWorkDuration(
+          DateTime.fromMillis(Number(end)),
+          DateTime.fromMillis(Number(start))
+        )
+        .toMillis()
+      );
+      if (part < sevenHourinMillis) {
+        const min = Duration.fromObject({ ["millisecond"]: part }).as("minute");
+        return { time: Math.round(min * 10) / 10, unit: "min" };
+      }
+      if (part < twoDayinMillis) {
+        const hour = Duration.fromObject({ ["millisecond"]: part }).as("hour");
+        return { time: Math.round(hour * 10) / 10, unit: "hour" };
+      }
+      const day = Duration.fromObject({ ["millisecond"]: part }).as("day");
+      return { time: Math.round(day * 10) / 10, unit: "Day" };
+    }, 
+    [start, end]
+  );
 
   const offsetToolTip = useMemo(() => {
     if (resourceId === resources[1].id) {

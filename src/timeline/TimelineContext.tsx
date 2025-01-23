@@ -18,6 +18,9 @@ import { TimelineInput } from "../utils/timeline";
 import { executeWithPerfomanceCheck } from "../utils/utils";
 import { KonvaTimelineError } from "..";
 
+import WorkTime from "../utils/workInterval/main";
+
+
 declare global {
   interface Window {
     __MELFORE_KONVA_TIMELINE_DEBUG__?: boolean;
@@ -327,15 +330,23 @@ export const TimelineProvider = ({
 
   const validTasks = useMemo(
     () =>
-      executeWithPerfomanceCheck("TimelineProvider", "validateTasks", () =>
-        validateTasks(externalTasks, range, timezone)
+      executeWithPerfomanceCheck(
+        "TimelineProvider", 
+        "validateTasks", 
+        () => validateTasks(externalTasks, range, timezone)
       ),
     [externalTasks, range, timezone]
   );
+
+  // Временные блоки которые учавствуют в отображении.
   const timeBlocks = useMemo(
     () =>
-      executeWithPerfomanceCheck("TimelineProvider", "timeBlocks", () =>
-        interval.splitBy({ [resolution.unit]: resolution.sizeInUnits })
+      executeWithPerfomanceCheck(
+        "TimelineProvider", 
+        "timeBlocks", 
+        () => interval
+        .splitBy({ [resolution.unit]: resolution.sizeInUnits })
+        .filter(WorkTime.timeBlockPredicate)
       ),
     [interval, resolution]
   );
@@ -362,12 +373,15 @@ export const TimelineProvider = ({
     return blocks;
   }, [interval, resolution]);
 
-  const columnWidth = useMemo(() => {
-    logDebug("TimelineProvider", "Calculating columnWidth...");
-    return !externalColumnWidth || externalColumnWidth < DEFAULT_GRID_COLUMN_WIDTH
-      ? resolution.columnSize
-      : externalColumnWidth;
-  }, [externalColumnWidth, resolution]);
+  const columnWidth = useMemo(
+    () => {
+      logDebug("TimelineProvider", "Calculating columnWidth...");
+      return !externalColumnWidth || externalColumnWidth < DEFAULT_GRID_COLUMN_WIDTH
+        ? resolution.columnSize
+        : externalColumnWidth;
+    }, 
+    [externalColumnWidth, resolution]
+  );
 
   const timeblocksOffset = useMemo(() => Math.floor(drawRange.start / columnWidth), [drawRange, columnWidth]);
 
@@ -390,6 +404,7 @@ export const TimelineProvider = ({
     }
 
     const vtbs = [...timeBlocks].slice(timeblocksOffset, endIndex);
+    console.log(vtbs);
     const end = DateTime.now().toMillis();
     logDebug("TimelineProvider", `Visible time blocks calculation took ${end - start} ms`);
     return vtbs;
@@ -451,14 +466,17 @@ export const TimelineProvider = ({
     return arrLine;
   }, [allValidTasks, drawRange, columnWidth, resolution, interval]);
 
-  const dragResolution = useMemo(() => {
-    logDebug("TimelineProvider", "Calculating drag resolution...");
-    const start = DateTime.now().toMillis();
-    const resData = getResolutionData(externalDragResolution || externalResolution);
-    const end = DateTime.now().toMillis();
-    logDebug("TimelineProvider", `Drag resolution calculation took ${end - start} ms`);
-    return resData;
-  }, [externalDragResolution, externalResolution]);
+  const dragResolution = useMemo(
+    () => {
+      logDebug("TimelineProvider", "Calculating drag resolution...");
+      const start = DateTime.now().toMillis();
+      const resData = getResolutionData(externalDragResolution || externalResolution);
+      const end = DateTime.now().toMillis();
+      logDebug("TimelineProvider", `Drag resolution calculation took ${end - start} ms`);
+      return resData;
+    }, 
+    [externalDragResolution, externalResolution]
+  );
 
   const resources = useMemo(() => addHeaderResource(externalResources, headerLabel), [externalResources, headerLabel]);
 
@@ -487,9 +505,12 @@ export const TimelineProvider = ({
     }
   }, [onErrors, validTasks]);
 
-  const summary = useMemo(() => {
-    return externalSummary ? [{ id: "0summary", label: "Summary" }, ...externalSummary] : [];
-  }, [externalSummary]);
+  const summary = useMemo(
+    () => {
+      return externalSummary ? [{ id: "0summary", label: "Summary" }, ...externalSummary] : [];
+    }, 
+    [externalSummary]
+  );
 
   return (
     <TimelineContext.Provider
