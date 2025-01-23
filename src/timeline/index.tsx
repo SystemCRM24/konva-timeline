@@ -20,11 +20,9 @@ import {
   TaskDimensions,
 } from "../tasks/utils/tasks";
 import { logDebug } from "../utils/logger";
-
-import { useTimelineContext } from "./TimelineContext";
-
 import WorkTime from "../utils/workInterval/main";
 
+import { useTimelineContext } from "./TimelineContext";
 
 interface TimelineProps {}
 
@@ -200,44 +198,33 @@ const Timeline: FC<TimelineProps> = () => {
   }, [externalRangeInMillis, interval]);
 
   // Расчет координаты для начала сетки координат
-  const xOfStart = useMemo(
-    () => {
-      const timeStart = DateTime.fromMillis(externalRangeInMillis.start);
-      let startOffsetInUnit = timeStart.diff(interval.start!);
-      // console.log(startOffsetInUnit);
-      // WorkTime logic
-      // startOffsetInUnit = startOffsetInUnit.plus(
-      //   WorkTime.calcNonWorkDuration(
-      //     WorkTime.edgeInterval.start!,
-      //     interval.start!
-      //   )
-      // );
-      // Back to main
-      console.log(startOffsetInUnit);
-      const res = (startOffsetInUnit.as(resolution.unit) * columnWidth) / resolution.sizeInUnits;
-      return res;
-    }, 
-    [externalRangeInMillis, columnWidth, resolution, interval]
-  );
+  const xOfStart = useMemo(() => {
+    const timeStart = DateTime.fromMillis(externalRangeInMillis.start);
+    const startOffsetInUnit = timeStart.diff(interval.start!);
+    // console.log(startOffsetInUnit);
+    // WorkTime logic
+    // startOffsetInUnit = startOffsetInUnit.plus(
+    //   WorkTime.calcNonWorkDuration(
+    //     WorkTime.edgeInterval.start!,
+    //     interval.start!
+    //   )
+    // );
+    // Back to main
+    // console.log(startOffsetInUnit);
+    const res = (startOffsetInUnit.as(resolution.unit) * columnWidth) / resolution.sizeInUnits;
+    return res;
+  }, [externalRangeInMillis, columnWidth, resolution, interval]);
 
   // Расчет координат для визуального окончания сетки дат
-  const xOfEnd = useMemo(
-    () => {
-      const timeEnd = DateTime.fromMillis(externalRangeInMillis.end);
-      let endOffsetInUnit = timeEnd.diff(interval.start!);
-      // WorkTime logic
-      endOffsetInUnit = endOffsetInUnit.minus(
-        WorkTime.calcNonWorkDuration(
-          interval.end!,
-          interval.start!,
-        )
-      );
-      // Back to main
-      const res = (endOffsetInUnit.as(resolution.unit) * columnWidth) / resolution.sizeInUnits;
-      return res;
-    }, 
-    [externalRangeInMillis, columnWidth, resolution, interval]
-  );
+  const xOfEnd = useMemo(() => {
+    const timeEnd = DateTime.fromMillis(externalRangeInMillis.end);
+    let endOffsetInUnit = timeEnd.diff(interval.start!);
+    // WorkTime logic
+    endOffsetInUnit = endOffsetInUnit.minus(WorkTime.calcNonWorkDuration(interval.end!, interval.start!));
+    // Back to main
+    const res = (endOffsetInUnit.as(resolution.unit) * columnWidth) / resolution.sizeInUnits;
+    return res;
+  }, [externalRangeInMillis, columnWidth, resolution, interval]);
 
   const endOffset = useMemo(() => {
     return fullTimelineWidth - xOfEnd;

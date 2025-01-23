@@ -19,7 +19,6 @@ import {
 } from "../../utils/tasks";
 import TaskResizeHandle from "../TaskResizeHandle";
 
-
 type TaskMouseEventHandler = (taskId: string, point: KonvaPoint) => void;
 
 type TaskProps = KonvaDrawable &

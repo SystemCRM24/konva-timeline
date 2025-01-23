@@ -10,7 +10,6 @@ import GridCellGroup from "../CellGroup";
 
 // import { intervalFilter } from "../../utils/workInterval/main";
 
-
 interface GridCellsProps {
   height: number;
 }

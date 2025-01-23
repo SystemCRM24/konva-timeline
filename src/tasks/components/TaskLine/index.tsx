@@ -24,7 +24,6 @@ import TaskResizeHandle from "../TaskResizeHandle";
 
 // import WorkTime from "../../../utils/workInterval/main";
 
-
 type TaskMouseEventHandler = (taskId: string, point: KonvaPoint) => void;
 
 type TaskProps = KonvaDrawable &
