@@ -4,6 +4,9 @@ import { TaskData } from "../tasks/utils/tasks";
 import { TimeRange } from "./time";
 import { Resolution } from "./time-resolution";
 
+import { RawInterval } from "./workIntervals";
+
+
 export type TimelineInput = {
   /**
    * Custom column width (defaults to 60px)
@@ -41,4 +44,8 @@ export type TimelineInput = {
    * List of resources to be displayed
    */
   resources: Resource[];
+  /**
+   * list of work intervals
+   */
+  workIntervals: RawInterval[];
 };

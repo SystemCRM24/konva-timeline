@@ -5,7 +5,7 @@ import { DateTime } from "luxon";
 import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { KonvaPoint } from "../../../utils/konva";
 import { InternalTimeRange } from "../../../utils/time";
-import WorkTime from "../../../utils/workInterval/main";
+// import WorkTime from "../../../utils/workIntervals";
 import { LINE_OFFSET } from "../../utils/line";
 import { getTaskYCoordinate, TASK_HEIGHT_OFFSET } from "../../utils/tasks";
 import LineKonva from "../Line";
@@ -65,8 +65,8 @@ const LayerLine: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip, create, o
     (startTime: number) => {
       const timeStart = DateTime.fromMillis(startTime);
       // WorkTime logic
-      const nonWorkTimeDiff = WorkTime.calcOuterNonWorkDuration(timeStart, resolution.unit);
-      const startOffsetInUnit = timeStart.diff(intervalStart!).minus(nonWorkTimeDiff).as(resolution.unit);
+      // const nonWorkTimeDiff = WorkTime.calcOuterNonWorkDuration(timeStart, resolution.unit);
+      const startOffsetInUnit = timeStart.diff(intervalStart!).as(resolution.unit);
       const res = getXCoordinate(startOffsetInUnit);
       return res;
     },
@@ -79,8 +79,8 @@ const LayerLine: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip, create, o
       const timeEnd = DateTime.fromMillis(end);
       const widthOffsetInUnit = timeEnd.diff(timeStart);
       // WorkTime logic
-      const nonWorkTimeDiff = WorkTime.calcNonWorkDuration(timeEnd, timeStart);
-      const result = widthOffsetInUnit.minus(nonWorkTimeDiff).as(resolution.unit);
+      // const nonWorkTimeDiff = WorkTime.calcNonWorkDuration(timeEnd, timeStart);
+      const result = widthOffsetInUnit.as(resolution.unit);
       return getXCoordinate(result);
     },
     [getXCoordinate, resolution]

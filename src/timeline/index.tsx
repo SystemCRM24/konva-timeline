@@ -20,7 +20,7 @@ import {
   TaskDimensions,
 } from "../tasks/utils/tasks";
 import { logDebug } from "../utils/logger";
-import WorkTime from "../utils/workInterval/main";
+// import WorkTime from "../utils/workIntervals";
 
 import { useTimelineContext } from "./TimelineContext";
 
@@ -220,7 +220,7 @@ const Timeline: FC<TimelineProps> = () => {
     const timeEnd = DateTime.fromMillis(externalRangeInMillis.end);
     let endOffsetInUnit = timeEnd.diff(interval.start!);
     // WorkTime logic
-    endOffsetInUnit = endOffsetInUnit.minus(WorkTime.calcNonWorkDuration(interval.end!, interval.start!));
+    // endOffsetInUnit = endOffsetInUnit.minus(WorkTime.calcNonWorkDuration(interval.end!, interval.start!));
     // Back to main
     const res = (endOffsetInUnit.as(resolution.unit) * columnWidth) / resolution.sizeInUnits;
     return res;

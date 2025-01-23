@@ -52,20 +52,20 @@ const GridCell = ({ column, height, index, hourInfo: visibleDayInfo }: GridCellP
     // WorkTime logic
     let divider;
     switch (resolution.label) {
-      case "1 Minute":
-      case "5 Minutes":
-      case "10 Minutes":
-      case "15 Minutes":
-      case "30 Minutes":
-      case "1 Hour":
-      case "2 Hours":
-      case "1/4 of Day":
-      case "1/2 of Day":
-      case "1 Day":
-        divider = 24 / 9;
-        break;
-      case "1 Week":
-      case "2 Weeks":
+      // case "1 Minute":
+      // case "5 Minutes":
+      // case "10 Minutes":
+      // case "15 Minutes":
+      // case "30 Minutes":
+      // case "1 Hour":
+      // case "2 Hours":
+      // case "1/4 of Day":
+      // case "1/2 of Day":
+      // case "1 Day":
+      //   divider = 24 / 9;
+      //   break;
+      // case "1 Week":
+      // case "2 Weeks":
       default:
         divider = 1;
     }
@@ -84,7 +84,7 @@ const GridCell = ({ column, height, index, hourInfo: visibleDayInfo }: GridCellP
   return (
     <KonvaGroup key={`timeslot-${index}`}>
       <KonvaLine x={xPos} y={yPos} points={[0, 0, 0, height]} stroke={stroke} strokeWidth={1} />
-      <KonvaText fill={themeColor} x={xPos - 200} y={yPos - 8} text={cellLabel} width={columnWidth} align="center" />
+      <KonvaText fill={themeColor} x={xPos} y={yPos - 8} text={cellLabel} width={columnWidth} align="center" />
     </KonvaGroup>
   );
 };

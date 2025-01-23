@@ -5,6 +5,8 @@ import { generateStoryData } from "../utils/stories/utils";
 
 import KonvaTimeline from ".";
 
+import data from "./mock.json"
+
 const meta = {
   title: "Scenario/MandarinGantt",
   component: KonvaTimeline,
@@ -23,12 +25,14 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+
 const { resources } = generateStoryData({
   averageTaskDurationInMinutes: 200,
   resourcesCount: 3,
   tasksCount: 5,
   timeRangeInDays: 1,
 });
+
 
 export const Line: Story = {
   args: {
@@ -44,6 +48,7 @@ export const Line: Story = {
       start: "2025-01-06T00:00:00+03:00",
       end: "2025-01-26T23:59:59+03:00",
     },
+    workIntervals: data,
     tasks: [
       {
         id: "1",

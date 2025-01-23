@@ -16,8 +16,12 @@ import { getIntervalFromInternalTimeRange } from "../utils/time";
 import { getResolutionData, Resolution, ResolutionData } from "../utils/time-resolution";
 import { TimelineInput } from "../utils/timeline";
 import { executeWithPerfomanceCheck } from "../utils/utils";
-import WorkTime from "../utils/workInterval/main";
+
 import { KonvaTimelineError } from "..";
+
+
+import { WorkTime } from "../utils/workIntervals";
+
 
 declare global {
   interface Window {
@@ -192,6 +196,7 @@ type TimelineContextType = Required<
   summaryWidth: number;
   summaryHeader?: string;
   customResources?: (resourceData: CustomRes) => React.JSX.Element;
+  workTime: WorkTime;
 };
 
 const TimelineContext = createContext<TimelineContextType | undefined>(undefined);
@@ -217,6 +222,7 @@ export const TimelineProvider = ({
   range: externalRange,
   resolution: externalResolution = "1hrs",
   resources: externalResources,
+  workIntervals,
   rowHeight: externalRowHeight,
   timezone: externalTimezone,
   theme: externalTheme = "light",
@@ -238,6 +244,9 @@ export const TimelineProvider = ({
   summaryHeader,
   customResources,
 }: TimelineProviderProps) => {
+  // WorkTime logic
+  const workTime = useMemo(() => new WorkTime(workIntervals), [workIntervals])
+
   const timezone = useMemo(() => {
     if (!externalTimezone) {
       return "system";
@@ -338,7 +347,9 @@ export const TimelineProvider = ({
   const timeBlocks = useMemo(
     () =>
       executeWithPerfomanceCheck("TimelineProvider", "timeBlocks", () =>
-        interval.splitBy({ [resolution.unit]: resolution.sizeInUnits }).filter(WorkTime.timeBlockPredicate)
+        interval
+        .splitBy({ [resolution.unit]: resolution.sizeInUnits })
+        // .filter(WorkTime.timeBlockPredicate)
       ),
     [interval, resolution]
   );
@@ -514,6 +525,7 @@ export const TimelineProvider = ({
         resolution,
         resolutionKey: externalResolution,
         resources,
+        workTime,
         resourcesContentHeight,
         rowHeight,
         setDrawRange,

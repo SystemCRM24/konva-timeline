@@ -5,7 +5,7 @@ import { DateTime, Duration } from "luxon";
 
 import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { KonvaPoint } from "../../../utils/konva";
-import WorkTime from "../../../utils/workInterval/main";
+// import WorkTime from "../../../utils/workIntervals";
 import { TaskData } from "../../utils/tasks";
 
 import DefaultToolTip from "./DefaultToolTip";
@@ -47,11 +47,11 @@ const TaskTooltip: FC<TaskTooltipProps> = ({ task, x, y }) => {
 
   const duration = useMemo(() => {
     // WorkTime logic
-    // const part = Number(end) - Number(start);
-    const part = WorkTime.calcWorkDuration(
-      DateTime.fromMillis(Number(end)),
-      DateTime.fromMillis(Number(start))
-    ).toMillis();
+    const part = Number(end) - Number(start);
+    // const part = WorkTime.calcWorkDuration(
+    //   DateTime.fromMillis(Number(end)),
+    //   DateTime.fromMillis(Number(start))
+    // ).toMillis();
     if (part < sevenHourinMillis) {
       const min = Duration.fromObject({ ["millisecond"]: part }).as("minute");
       return { time: Math.round(min * 10) / 10, unit: "min" };
