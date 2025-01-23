@@ -3,9 +3,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 import DecoratoGantt from "../utils/stories/decorators/Gantt";
 import { generateStoryData } from "../utils/stories/utils";
 
+import data from "./mock.json";
 import KonvaTimeline from ".";
-
-import data from "./mock.json"
 
 const meta = {
   title: "Scenario/MandarinGantt",
@@ -25,14 +24,12 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-
 const { resources } = generateStoryData({
   averageTaskDurationInMinutes: 200,
   resourcesCount: 3,
   tasksCount: 5,
   timeRangeInDays: 1,
 });
-
 
 export const Line: Story = {
   args: {

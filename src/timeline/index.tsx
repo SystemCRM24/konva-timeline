@@ -20,8 +20,8 @@ import {
   TaskDimensions,
 } from "../tasks/utils/tasks";
 import { logDebug } from "../utils/logger";
-// import WorkTime from "../utils/workIntervals";
 
+// import WorkTime from "../utils/workIntervals";
 import { useTimelineContext } from "./TimelineContext";
 
 interface TimelineProps {}
@@ -218,7 +218,7 @@ const Timeline: FC<TimelineProps> = () => {
   // Расчет координат для визуального окончания сетки дат
   const xOfEnd = useMemo(() => {
     const timeEnd = DateTime.fromMillis(externalRangeInMillis.end);
-    let endOffsetInUnit = timeEnd.diff(interval.start!);
+    const endOffsetInUnit = timeEnd.diff(interval.start!);
     // WorkTime logic
     // endOffsetInUnit = endOffsetInUnit.minus(WorkTime.calcNonWorkDuration(interval.end!, interval.start!));
     // Back to main

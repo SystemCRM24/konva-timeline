@@ -3,9 +3,7 @@ import { TaskData } from "../tasks/utils/tasks";
 
 import { TimeRange } from "./time";
 import { Resolution } from "./time-resolution";
-
 import { RawInterval } from "./workIntervals";
-
 
 export type TimelineInput = {
   /**

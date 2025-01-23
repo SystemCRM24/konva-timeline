@@ -16,12 +16,8 @@ import { getIntervalFromInternalTimeRange } from "../utils/time";
 import { getResolutionData, Resolution, ResolutionData } from "../utils/time-resolution";
 import { TimelineInput } from "../utils/timeline";
 import { executeWithPerfomanceCheck } from "../utils/utils";
-
-import { KonvaTimelineError } from "..";
-
-
 import { WorkTime } from "../utils/workIntervals";
-
+import { KonvaTimelineError } from "..";
 
 declare global {
   interface Window {
@@ -245,7 +241,7 @@ export const TimelineProvider = ({
   customResources,
 }: TimelineProviderProps) => {
   // WorkTime logic
-  const workTime = useMemo(() => new WorkTime(workIntervals), [workIntervals])
+  const workTime = useMemo(() => new WorkTime(workIntervals), [workIntervals]);
 
   const timezone = useMemo(() => {
     if (!externalTimezone) {
@@ -346,9 +342,10 @@ export const TimelineProvider = ({
   // Временные блоки которые учавствуют в отображении.
   const timeBlocks = useMemo(
     () =>
-      executeWithPerfomanceCheck("TimelineProvider", "timeBlocks", () =>
-        interval
-        .splitBy({ [resolution.unit]: resolution.sizeInUnits })
+      executeWithPerfomanceCheck(
+        "TimelineProvider",
+        "timeBlocks",
+        () => interval.splitBy({ [resolution.unit]: resolution.sizeInUnits })
         // .filter(WorkTime.timeBlockPredicate)
       ),
     [interval, resolution]
