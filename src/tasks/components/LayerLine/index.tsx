@@ -28,8 +28,18 @@ interface TasksLayerProps {
  * Depending on your screen size you might be able to test also the horizontal scrolling behaviour.
  */
 const LayerLine: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip, create, onTaskEvent }) => {
-  const { columnWidth, drawRange, interval, resolution, resources, rowHeight, tasks, toolTip, validLine } =
-    useTimelineContext();
+  const { 
+    columnWidth,
+    drawRange, 
+    interval, 
+    resolution, 
+    resources, 
+    rowHeight, 
+    tasks, 
+    toolTip, 
+    validLine,
+    workTime
+  } = useTimelineContext();
 
   const [workLine, setWorkLine] = useState([""]);
   const { start: intervalStart, end: intervalEnd } = interval;
@@ -64,10 +74,12 @@ const LayerLine: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip, create, o
   const getTaskXCoordinate = useCallback(
     (startTime: number) => {
       const timeStart = DateTime.fromMillis(startTime);
+      let startOffsetInUnit = timeStart.diff(intervalStart!);
       // WorkTime logic
-      // const nonWorkTimeDiff = WorkTime.calcOuterNonWorkDuration(timeStart, resolution.unit);
-      const startOffsetInUnit = timeStart.diff(intervalStart!).as(resolution.unit);
-      const res = getXCoordinate(startOffsetInUnit);
+      const nonWorkTimeDiff = workTime.calcOuterNonWorkDuration(timeStart, resolution.unit);
+      startOffsetInUnit = startOffsetInUnit.minus(nonWorkTimeDiff);
+      // end
+      const res = getXCoordinate(startOffsetInUnit.as(resolution.unit));
       return res;
     },
     [getXCoordinate, intervalStart, resolution.unit]
@@ -77,10 +89,12 @@ const LayerLine: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip, create, o
     ({ start, end }: InternalTimeRange) => {
       const timeStart = DateTime.fromMillis(start);
       const timeEnd = DateTime.fromMillis(end);
-      const widthOffsetInUnit = timeEnd.diff(timeStart);
+      let widthOffset = timeEnd.diff(timeStart);
       // WorkTime logic
-      // const nonWorkTimeDiff = WorkTime.calcNonWorkDuration(timeEnd, timeStart);
-      const result = widthOffsetInUnit.as(resolution.unit);
+      const nonWorkTimeDiff = workTime.calcNonWorkDuration(timeEnd, timeStart);
+      widthOffset = widthOffset.minus(nonWorkTimeDiff);
+      // end
+      const result = widthOffset.as(resolution.unit);
       return getXCoordinate(result);
     },
     [getXCoordinate, resolution]

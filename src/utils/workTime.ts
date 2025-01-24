@@ -73,13 +73,4 @@ export class WorkTime {
     const from = this.total.start!.startOf(resolution);
     return this.calcNonWorkDuration(to, from);
   }
-
-  timeBlockPredicate(interval: Interval) {
-    for (const workInterval of this.intervals) {
-      if (workInterval.intersection(interval)) {
-        return true;
-      }
-    }
-    return false;
-  }
 }

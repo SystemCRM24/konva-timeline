@@ -52,6 +52,7 @@ const DefaultToolTip: FC<DefaultToolTip> = ({
         <span style={{ fontFamily: "Courier New", fontSize: 13 }}>{startDuration}</span>
       </div>
       <br></br>
+
       <div style={{ display: "inline-flex", alignItems: "center" }}>
         <b style={{ fontSize: 14, fontFamily: "Times New Roman", fontWeight: 700 }}>{localized.end}: </b>
         &nbsp;&nbsp;&nbsp;
@@ -67,6 +68,7 @@ const DefaultToolTip: FC<DefaultToolTip> = ({
         </span>
       </div>
       <br></br>
+
       {completedPercentage && (
         <div style={{ display: "inline-flex", alignItems: "center" }}>
           <b style={{ fontFamily: "Times New Roman", fontSize: 14, fontWeight: 700 }}>{localized.completed}: </b>
@@ -74,6 +76,7 @@ const DefaultToolTip: FC<DefaultToolTip> = ({
           <span style={{ fontFamily: "Courier New", fontSize: 13 }}>{percentage}</span>
         </div>
       )}
+      
     </div>
   );
 };

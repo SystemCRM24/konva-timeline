@@ -16,7 +16,7 @@ import { getIntervalFromInternalTimeRange } from "../utils/time";
 import { getResolutionData, Resolution, ResolutionData } from "../utils/time-resolution";
 import { TimelineInput } from "../utils/timeline";
 import { executeWithPerfomanceCheck } from "../utils/utils";
-import { WorkTime } from "../utils/workIntervals";
+import { WorkTime } from "../utils/workTime";
 import { KonvaTimelineError } from "..";
 
 declare global {
@@ -57,6 +57,9 @@ export type CustomRes = {
   };
 };
 
+type taskChangeOpts = {tasksId?: string[]; addTime?: number , coords?: {x: number, y: number}};
+
+
 export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
   /**
    * Enables debug logging in browser console
@@ -89,7 +92,7 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
   /**
    * Event handler for task change event (drag and resize)
    */
-  onTaskChange?: (task: TaskData, opts?: { tasksId: string[]; addTime: number }) => void;
+  onTaskChange?: (task: TaskData, opts?: taskChangeOpts) => void;
   /**
    * Timezone used for display (defaults to 'system')
    */
@@ -152,6 +155,9 @@ type TimelineTheme = {
   color: string;
 };
 
+
+
+
 type TimelineContextType = Required<
   Pick<TimelineInput, "columnWidth" | "displayTasksLabel" | "hideResources" | "resources" | "rowHeight">
 > & {
@@ -166,7 +172,7 @@ type TimelineContextType = Required<
   interval: Interval;
   onErrors?: (errors: KonvaTimelineError[]) => void;
   onTaskClick?: (task: TaskData) => void;
-  onTaskChange?: (task: TaskData, opts?: { tasksId: string[]; addTime: number }) => void;
+  onTaskChange?: (task: TaskData, opts?: taskChangeOpts) => void;
   resolution: ResolutionData;
   resolutionKey: Resolution;
   resourcesContentHeight: number;
@@ -315,6 +321,7 @@ export const TimelineProvider = ({
     return timeBlocksPreload;
   }, [resolution]);
 
+
   const initialDateTime = useMemo(() => {
     let initial = DateTime.now().toMillis();
     if (externalInitialDateTime) {
@@ -346,7 +353,14 @@ export const TimelineProvider = ({
         "TimelineProvider",
         "timeBlocks",
         () => interval.splitBy({ [resolution.unit]: resolution.sizeInUnits })
-        // .filter(WorkTime.timeBlockPredicate)
+        .filter((interval) => {
+          for ( const workInterval of workTime.intervals) {
+            if ( workInterval.intersection(interval) ) {
+              return true;
+            }
+          }
+          return false;
+        })
       ),
     [interval, resolution]
   );
@@ -369,7 +383,6 @@ export const TimelineProvider = ({
       blocks.push(Interval.fromDateTimes(blockStart, blockEnd));
       blockStart = blockEnd.startOf(unitAbove).plus({ [unitAbove]: 1 });
     }
-
     return blocks;
   }, [interval, resolution]);
 
@@ -382,6 +395,8 @@ export const TimelineProvider = ({
 
   const timeblocksOffset = useMemo(() => Math.floor(drawRange.start / columnWidth), [drawRange, columnWidth]);
 
+  // Отображаемые блоки. Сделано для оптимизации. 
+  // правая граница (endIndex) убрана из среза.
   const visibleTimeBlocks = useMemo(() => {
     logDebug("TimelineProvider", "Calculating visible time blocks...");
     const start = DateTime.now().toMillis();
@@ -400,8 +415,7 @@ export const TimelineProvider = ({
       endIndex = endIndex + TIME_BLOCKS_PRELOAD;
     }
 
-    const vtbs = [...timeBlocks].slice(timeblocksOffset, endIndex);
-    // console.log(vtbs);
+    const vtbs = [...timeBlocks].slice(timeblocksOffset);
     const end = DateTime.now().toMillis();
     logDebug("TimelineProvider", `Visible time blocks calculation took ${end - start} ms`);
     return vtbs;
@@ -415,7 +429,6 @@ export const TimelineProvider = ({
         end: visibleTimeBlocks[visibleTimeBlocks.length - 1].end!.toMillis(),
       };
     }
-
     return range;
   }, [visibleTimeBlocks]);
 

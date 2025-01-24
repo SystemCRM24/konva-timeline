@@ -212,7 +212,6 @@ const TaskLine = ({
       if (!stage) {
         return;
       }
-
       const point = stage.getPointerPosition();
       if (!point) {
         return;
@@ -264,7 +263,6 @@ const TaskLine = ({
       if (enableDrag) {
         stage.container().style.cursor = "move";
       }
-
       onTaskMouseEvent(e, onOver);
     },
     [enableDrag, onOver, onTaskMouseEvent, resizing, disabled]

@@ -34,6 +34,7 @@ const TasksLayer: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip, create, 
     rowHeight,
     tasks,
     toolTip,
+    workTime
   } = useTimelineContext();
 
   const getResourceById = useCallback(
@@ -66,6 +67,9 @@ const TasksLayer: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip, create, 
   const getTaskXCoordinate = useCallback(
     (startTime: number) => {
       const timeStart = DateTime.fromMillis(startTime);
+      // WorkTime logic
+      // const nonWorkTimeDiff = workTime.calcOuterNonWorkDuration(timeStart, resolution.unit);
+      // console.log(nonWorkTimeDiff);
       const startOffsetInUnit = timeStart.diff(intervalStart!).as(resolution.unit);
       return getXCoordinate(startOffsetInUnit);
     },

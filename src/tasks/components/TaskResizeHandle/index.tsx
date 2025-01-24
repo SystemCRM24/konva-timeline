@@ -40,7 +40,7 @@ const TaskResizeHandle = ({
       if (!stage || !enableResize) {
         return;
       }
-
+      
       stage.container().style.cursor = "default";
     },
     [enableResize]
@@ -53,7 +53,7 @@ const TaskResizeHandle = ({
       if (!stage || !enableResize) {
         return;
       }
-
+      
       const mouseCursor = `${position === "lx" ? "w" : "e"}-resize`;
       stage.container().style.cursor = mouseCursor;
     },

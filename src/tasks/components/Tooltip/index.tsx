@@ -28,7 +28,6 @@ const TaskTooltip: FC<TaskTooltipProps> = ({ task, x, y }) => {
     localized,
     customToolTip,
   } = useTimelineContext();
-
   const {
     label,
     completedPercentage,

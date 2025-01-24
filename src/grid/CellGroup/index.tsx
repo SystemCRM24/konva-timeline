@@ -32,15 +32,13 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
     () => displayAboveInterval(column, unitAbove, dateLocale!),
     [column, unitAbove, dateLocale]
   );
-
   const points = useMemo(() => [0, 0, 0, rowHeight], [rowHeight]);
 
   const unitAboveInUnitBelow = useMemo(() => {
     if (unitAbove === "month") {
       return Duration.fromObject({ ["day"]: dayInfo!.thisMonth }).as("week") / sizeInUnits;
     }
-
-    return Duration.fromObject({ [unitAbove]: 1 }).as(unit) / sizeInUnits;
+    return Duration.fromObject({ [unitAbove]: 1 }).as(unit) / sizeInUnits / ((24 * 7) / (9 * 5));
   }, [sizeInUnits, dayInfo, unitAbove, unit]);
 
   const unitAboveSpanInPx = useMemo(() => {

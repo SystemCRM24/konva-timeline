@@ -165,7 +165,6 @@ const Task = ({
     if (!dragSnapInPx || isNaN(dragSnapInPx)) {
       return 1;
     }
-
     return dragSnapInPx;
   }, [columnWidth, dragUnit, dragSizeInUnits, sizeInUnits, unit]);
 
@@ -310,7 +309,7 @@ const Task = ({
 
       const { id: resourceId } = findResourceByCoordinate(y, rowHeight, resources);
       const time = onEndTimeRange(taskDimensions, resolution, columnWidth, interval);
-      onTaskChange({ ...data, resourceId, time });
+      onTaskChange({ ...data, resourceId, time }, {coords: {x, y}});
     },
     [
       rowHeight,
@@ -401,7 +400,7 @@ const Task = ({
       }
 
       const time = onEndTimeRange(taskDimensions, resolution, columnWidth, interval);
-      onTaskChange({ ...data, time });
+      onTaskChange({ ...data, time }, {coords: {x, y}});
     },
     [onTaskChange, data, taskDimensions, resolution, columnWidth, interval, onTaskEvent]
   );

@@ -21,7 +21,6 @@ import {
 } from "../tasks/utils/tasks";
 import { logDebug } from "../utils/logger";
 
-// import WorkTime from "../utils/workIntervals";
 import { useTimelineContext } from "./TimelineContext";
 
 interface TimelineProps {}
@@ -52,6 +51,7 @@ const Timeline: FC<TimelineProps> = () => {
     externalRangeInMillis,
     showSummary,
     summaryWidth,
+    workTime
   } = useTimelineContext();
 
   const [scrollbarSize, setScrollbarSize] = useState(0);
@@ -218,9 +218,9 @@ const Timeline: FC<TimelineProps> = () => {
   // Расчет координат для визуального окончания сетки дат
   const xOfEnd = useMemo(() => {
     const timeEnd = DateTime.fromMillis(externalRangeInMillis.end);
-    const endOffsetInUnit = timeEnd.diff(interval.start!);
+    let endOffsetInUnit = timeEnd.diff(interval.start!);
     // WorkTime logic
-    // endOffsetInUnit = endOffsetInUnit.minus(WorkTime.calcNonWorkDuration(interval.end!, interval.start!));
+    endOffsetInUnit = endOffsetInUnit.minus(workTime.calcNonWorkDuration(interval.end!, interval.start!));
     // Back to main
     const res = (endOffsetInUnit.as(resolution.unit) * columnWidth) / resolution.sizeInUnits;
     return res;

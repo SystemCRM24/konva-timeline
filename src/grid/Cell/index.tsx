@@ -61,9 +61,9 @@ const GridCell = ({ column, height, index, hourInfo: visibleDayInfo }: GridCellP
       // case "2 Hours":
       // case "1/4 of Day":
       // case "1/2 of Day":
-      // case "1 Day":
-      //   divider = 24 / 9;
-      //   break;
+      case "1 Day":
+        divider = 24 / 9;
+        break;
       // case "1 Week":
       // case "2 Weeks":
       default:
@@ -84,7 +84,7 @@ const GridCell = ({ column, height, index, hourInfo: visibleDayInfo }: GridCellP
   return (
     <KonvaGroup key={`timeslot-${index}`}>
       <KonvaLine x={xPos} y={yPos} points={[0, 0, 0, height]} stroke={stroke} strokeWidth={1} />
-      <KonvaText fill={themeColor} x={xPos} y={yPos - 8} text={cellLabel} width={columnWidth} align="center" />
+      <KonvaText fill={themeColor} x={xPos - 150} y={yPos - 8} text={cellLabel} width={columnWidth} align="center" />
     </KonvaGroup>
   );
 };
