@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Group, Rect, useStrictMode as enableStrictMode } from "react-konva";
 import { KonvaEventObject } from "konva/lib/Node";
-import { DateTime, Duration } from "luxon";
+import { DateTime, Duration, Interval } from "luxon";
 
 import { KonvaText } from "../../../@konva";
 import { findResourceByCoordinate, findResourceIndexByCoordinate } from "../../../resources/utils/resources";
@@ -22,7 +22,6 @@ import {
 import LineKonva from "../Line";
 import TaskResizeHandle from "../TaskResizeHandle";
 
-// import WorkTime from "../../../utils/workInterval/main";
 
 type TaskMouseEventHandler = (taskId: string, point: KonvaPoint) => void;
 
@@ -105,6 +104,7 @@ const TaskLine = ({
     enableLines,
     validLine,
     externalRangeInMillis,
+    workTime
   } = useTimelineContext();
 
   const { id: taskId, completedPercentage } = data;
@@ -465,21 +465,21 @@ const TaskLine = ({
         switch (handler) {
           case "rx":
             if (handlerX <= taskX + TASK_BORDER_RADIUS) {
-              return { ...taskDimensions };
+              return { ...taskDimensions, handler };
             }
             if (handlerX >= finalPoint) {
-              return { ...taskDimensions, width: finalPoint - taskX };
+              return { ...taskDimensions, width: finalPoint - taskX, handler };
             }
 
-            return { ...taskDimensions, width: handlerX - taskX };
+            return { ...taskDimensions, width: handlerX - taskX, handler };
           case "lx":
             if (handlerX >= taskEndX - TASK_BORDER_RADIUS) {
-              return { ...taskDimensions };
+              return { ...taskDimensions, handler };
             }
             if (handlerX <= startPoint) {
-              return { ...taskDimensions };
+              return { ...taskDimensions, handler };
             }
-            return { ...taskDimensions, x: handlerX, width: taskEndX - handlerX };
+            return { ...taskDimensions, x: handlerX, width: taskEndX - handlerX, handler };
         }
       });
     },
@@ -496,7 +496,10 @@ const TaskLine = ({
       if (!onTaskChange) {
         return;
       }
-      const time = onEndTimeRange(taskDimensions, resolution, columnWidth, interval);
+      let time = onEndTimeRange(taskDimensions, resolution, columnWidth, interval);
+      // WorkTime logic
+      time = workTime.onTaskResize(data.time, time, taskDimensions.handler!);
+      // end of this shit
       workLine && workLine([]);
       if (enableLines && data.relatedTasks && frontLine) {
         const addTime = +time.end - +data.time.end;

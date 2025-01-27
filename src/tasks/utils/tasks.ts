@@ -42,6 +42,7 @@ export type TaskDimensions = {
   width: number;
   x: number;
   y: number;
+  handler?: string;
 };
 
 export type AreaSelect = {

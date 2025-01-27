@@ -1,9 +1,11 @@
 import { DateTime, DateTimeUnit, Duration, Interval } from "luxon";
+import { TimeRange } from "./time";
 
 /**
  * Типизация интервала для рабочего дня который проиходит ответом от сервера.
  */
 export type RawInterval = { start: string; end: string };
+
 
 export class WorkTime {
   /**
@@ -72,5 +74,61 @@ export class WorkTime {
   calcOuterNonWorkDuration(to: DateTime, resolution: DateTimeUnit) {
     const from = this.total.start!.startOf(resolution);
     return this.calcNonWorkDuration(to, from);
+  }
+
+  /**
+   * Проверяет, находится ли дата в промежутке рабочего времени
+   * @param date Дата для проверки
+   * @returns true если находится, false в противном случае.
+   */
+  dateOnWorkTime(date: DateTime) {
+    for ( const workInterval of this.intervals ) {
+      if ( workInterval.contains(date) ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  onTaskResize(oldTime: TimeRange, newTime: TimeRange,  direction: string): TimeRange {
+    let start = DateTime.fromMillis(oldTime.start as number);
+    let end = DateTime.fromMillis(oldTime.end as number);
+    let oldInterval = Interval.fromDateTimes(start, end);
+    let newInterval = Interval.fromDateTimes(
+      DateTime.fromMillis(newTime.start as number),
+      DateTime.fromMillis(newTime.end as number),
+    );
+    
+    const stepAbs = 60000;
+    let step = Duration.fromMillis(stepAbs);
+    let diff = newInterval.toDuration().minus(oldInterval.toDuration());
+    if ( diff.milliseconds < 0 ) {
+      step = step.negate();
+      diff = diff.negate();
+    }
+    let diffAbs = diff.toMillis();
+
+    switch ( direction ) {
+      case 'lx':
+        while ( diffAbs > 0 ) {
+          start = start.minus(step);
+          // diffAbs -= stepAbs;
+          if ( this.dateOnWorkTime(start) ) {
+            diffAbs -= stepAbs;
+          }
+        }
+        break;
+      case 'rx':
+      default:
+        while ( diffAbs > 0 ) {
+          end = end.plus(step);
+          // diffAbs -= stepAbs;
+          if ( this.dateOnWorkTime(end) ) {
+            diffAbs -= stepAbs;
+          }
+        }
+    }
+
+    return {start: start.toMillis(), end: end.toMillis()};
   }
 }

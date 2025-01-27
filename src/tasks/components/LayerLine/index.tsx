@@ -5,7 +5,6 @@ import { DateTime } from "luxon";
 import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { KonvaPoint } from "../../../utils/konva";
 import { InternalTimeRange } from "../../../utils/time";
-// import WorkTime from "../../../utils/workIntervals";
 import { LINE_OFFSET } from "../../utils/line";
 import { getTaskYCoordinate, TASK_HEIGHT_OFFSET } from "../../utils/tasks";
 import LineKonva from "../Line";

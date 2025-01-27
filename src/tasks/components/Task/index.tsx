@@ -399,7 +399,7 @@ const Task = ({
         return;
       }
 
-      const time = onEndTimeRange(taskDimensions, resolution, columnWidth, interval);
+      let time = onEndTimeRange(taskDimensions, resolution, columnWidth, interval);
       onTaskChange({ ...data, time }, {coords: {x, y}});
     },
     [onTaskChange, data, taskDimensions, resolution, columnWidth, interval, onTaskEvent]
