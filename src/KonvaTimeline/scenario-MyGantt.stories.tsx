@@ -93,9 +93,9 @@ export const Line: Story = {
         },
       },
     ],
-    // onTaskChange: (task, opts) => {
-    //   // console.log(task, opts);
-    //   task.id, opts;
-    // },
+    onTaskChange: (task, opts) => {
+      console.log(task, opts);
+      task.id, opts;
+    },
   },
 };

@@ -356,8 +356,8 @@ const TaskLine = ({
       if (!onTaskChange) {
         return;
       }
-
       const { x, y } = getDragPoint(e);
+      console.log(x, y);
       const dragFinalX = Math.ceil(x / dragSnapInPX) * dragSnapInPX;
       const xCoordinate = dragFinalX < 0 ? 0 : dragFinalX;
       const resourceIndex = findResourceIndexByCoordinate(y + taskHeight / 2, rowHeight, resources);
@@ -366,7 +366,13 @@ const TaskLine = ({
       setTaskDimensions((dimensions) => ({ ...dimensions, ...point }));
 
       const { id: resourceId } = findResourceByCoordinate(y, rowHeight, resources);
-      const time = onEndTimeRange(taskDimensions, resolution, columnWidth, interval);
+      let time = onEndTimeRange(taskDimensions, resolution, columnWidth, interval);
+      console.log(time);
+      // WorkTime logic
+      time = workTime.onTaskResize(data.time, time, taskDimensions.handler!);
+      // console.log(data, time)
+      data.time = time;
+      // end of this shit
       setFrontLine(false);
       setBackLine(false);
       workLine && workLine([]);
@@ -485,7 +491,6 @@ const TaskLine = ({
     },
     [getDragPoint, finalPoint, startPoint]
   );
-
   const onResizeEnd = useCallback(
     (e: KonvaEventObject<DragEvent>) => {
       setBackLine(false);
@@ -499,6 +504,8 @@ const TaskLine = ({
       let time = onEndTimeRange(taskDimensions, resolution, columnWidth, interval);
       // WorkTime logic
       time = workTime.onTaskResize(data.time, time, taskDimensions.handler!);
+      // console.log(data, time)
+      data.time = time;
       // end of this shit
       workLine && workLine([]);
       if (enableLines && data.relatedTasks && frontLine) {

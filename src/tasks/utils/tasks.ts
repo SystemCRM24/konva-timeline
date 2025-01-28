@@ -73,6 +73,9 @@ export const validateTasks = (
   range: InternalTimeRange | null,
   timezone: string | undefined
 ): FilteredTasks => {
+
+  console.log('call filter task');
+
   const tz = timezone || "system";
   if (!range || !range.start || !range.end) {
     return { items: [], errors: [{ entity: "timeline", level: "warn", message: "Invalid range" }] };

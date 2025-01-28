@@ -91,7 +91,7 @@ const LayerLine: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip, create, o
       let widthOffset = timeEnd.diff(timeStart);
       // WorkTime logic
       const nonWorkTimeDiff = workTime.calcNonWorkDuration(timeEnd, timeStart);
-      widthOffset = widthOffset.minus(nonWorkTimeDiff);
+      widthOffset = nonWorkTimeDiff.isValid ? widthOffset.minus(nonWorkTimeDiff) : widthOffset;
       // end
       const result = widthOffset.as(resolution.unit);
       return getXCoordinate(result);

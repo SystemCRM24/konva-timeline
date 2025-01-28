@@ -41,7 +41,7 @@ export class WorkTime {
     let stopFlag = false;
     for (const interval of this.intervals) {
       const intersection = requestInterval.intersection(interval);
-      if (intersection !== null) {
+      if (intersection !== null && intersection.isValid ) {
         duration = duration.plus(intersection.toDuration());
         stopFlag = true;
         continue;

@@ -308,7 +308,7 @@ const Task = ({
       setTaskDimensions((dimensions) => ({ ...dimensions, ...point }));
 
       const { id: resourceId } = findResourceByCoordinate(y, rowHeight, resources);
-      const time = onEndTimeRange(taskDimensions, resolution, columnWidth, interval);
+      let time = onEndTimeRange(taskDimensions, resolution, columnWidth, interval);
       onTaskChange({ ...data, resourceId, time }, {coords: {x, y}});
     },
     [
