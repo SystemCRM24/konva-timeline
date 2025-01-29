@@ -93,15 +93,16 @@ export class WorkTime {
   onTaskResize(oldTime: TimeRange, newTime: TimeRange,  direction: string): TimeRange {
     let start = DateTime.fromMillis(oldTime.start as number);
     let end = DateTime.fromMillis(oldTime.end as number);
-    let oldInterval = Interval.fromDateTimes(start, end);
+    let oldInterval = Interval.fromDateTimes(start, end).toDuration();
+    oldInterval = oldInterval.minus(this.calcNonWorkDuration(end, start));
     let newInterval = Interval.fromDateTimes(
       DateTime.fromMillis(newTime.start as number),
       DateTime.fromMillis(newTime.end as number),
     );
-    
+
     const stepAbs = 60000;
     let step = Duration.fromMillis(stepAbs);
-    let diff = newInterval.toDuration().minus(oldInterval.toDuration());
+    let diff = newInterval.toDuration().minus(oldInterval);
     if ( diff.milliseconds < 0 ) {
       step = step.negate();
       diff = diff.negate();
@@ -113,7 +114,7 @@ export class WorkTime {
         while ( diffAbs > 0 ) {
           start = start.minus(step);
           // diffAbs -= stepAbs;
-          if ( this.dateOnWorkTime(start) ) {
+          if ( this.dateOnWorkTime(start) || !(this.total.contains(start)) ) {
             diffAbs -= stepAbs;
           }
         }
@@ -123,12 +124,11 @@ export class WorkTime {
         while ( diffAbs > 0 ) {
           end = end.plus(step);
           // diffAbs -= stepAbs;
-          if ( this.dateOnWorkTime(end) ) {
+          if ( this.dateOnWorkTime(end) || !(this.total.contains(end)) ) {
             diffAbs -= stepAbs;
           }
         }
     }
-
     return {start: start.toMillis(), end: end.toMillis()};
   }
 }

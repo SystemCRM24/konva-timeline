@@ -357,7 +357,6 @@ const TaskLine = ({
         return;
       }
       const { x, y } = getDragPoint(e);
-      console.log(x, y);
       const dragFinalX = Math.ceil(x / dragSnapInPX) * dragSnapInPX;
       const xCoordinate = dragFinalX < 0 ? 0 : dragFinalX;
       const resourceIndex = findResourceIndexByCoordinate(y + taskHeight / 2, rowHeight, resources);
@@ -367,11 +366,9 @@ const TaskLine = ({
 
       const { id: resourceId } = findResourceByCoordinate(y, rowHeight, resources);
       let time = onEndTimeRange(taskDimensions, resolution, columnWidth, interval);
-      console.log(time);
       // WorkTime logic
       time = workTime.onTaskResize(data.time, time, taskDimensions.handler!);
       // console.log(data, time)
-      data.time = time;
       // end of this shit
       setFrontLine(false);
       setBackLine(false);
@@ -531,6 +528,7 @@ const TaskLine = ({
       externalRangeInMillis,
     ]
   );
+
   const percentage = useMemo(() => {
     if (completedPercentage === 0) {
       return 0.1;

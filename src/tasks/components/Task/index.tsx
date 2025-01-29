@@ -95,6 +95,7 @@ const Task = ({
     rowHeight,
     drawRange,
     enableTaskPattern,
+    workTime
   } = useTimelineContext();
 
   const { id: taskId, completedPercentage } = data;
@@ -309,6 +310,10 @@ const Task = ({
 
       const { id: resourceId } = findResourceByCoordinate(y, rowHeight, resources);
       let time = onEndTimeRange(taskDimensions, resolution, columnWidth, interval);
+      // WorkTime logic
+      time = workTime.onTaskResize(data.time, time, taskDimensions.handler!);
+      // console.log(data, time)
+      // end of this shit
       onTaskChange({ ...data, resourceId, time }, {coords: {x, y}});
     },
     [
@@ -400,6 +405,11 @@ const Task = ({
       }
 
       let time = onEndTimeRange(taskDimensions, resolution, columnWidth, interval);
+      // WorkTime logic
+      time = workTime.onTaskResize(data.time, time, taskDimensions.handler!);
+      // console.log(data, time)
+      data.time = time;
+      // end of this shit
       onTaskChange({ ...data, time }, {coords: {x, y}});
     },
     [onTaskChange, data, taskDimensions, resolution, columnWidth, interval, onTaskEvent]

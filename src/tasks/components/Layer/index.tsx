@@ -67,11 +67,12 @@ const TasksLayer: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip, create, 
   const getTaskXCoordinate = useCallback(
     (startTime: number) => {
       const timeStart = DateTime.fromMillis(startTime);
+      let startOffsetInUnit = timeStart.diff(intervalStart!);
       // WorkTime logic
       const nonWorkTimeDiff = workTime.calcOuterNonWorkDuration(timeStart, resolution.unit);
-      // console.log(nonWorkTimeDiff);
-      const startOffsetInUnit = timeStart.diff(intervalStart!).as(resolution.unit);
-      return getXCoordinate(startOffsetInUnit);
+      startOffsetInUnit = startOffsetInUnit.minus(nonWorkTimeDiff);
+      // end
+      return getXCoordinate(startOffsetInUnit.as(resolution.unit));
     },
     [getXCoordinate, intervalStart, resolution.unit]
   );
@@ -80,8 +81,12 @@ const TasksLayer: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip, create, 
     ({ start, end }: InternalTimeRange) => {
       const timeStart = DateTime.fromMillis(start);
       const timeEnd = DateTime.fromMillis(end);
-      const widthOffsetInUnit = timeEnd.diff(timeStart).as(resolution.unit);
-      return getXCoordinate(widthOffsetInUnit);
+      let widthOffset = timeEnd.diff(timeStart);
+      // WorkTime logic
+      const nonWorkTimeDiff = workTime.calcNonWorkDuration(timeEnd, timeStart);
+      widthOffset = nonWorkTimeDiff.isValid ? widthOffset.minus(nonWorkTimeDiff) : widthOffset;
+      // end
+      return getXCoordinate(widthOffset.as(resolution.unit));
     },
     [getXCoordinate, resolution.unit]
   );

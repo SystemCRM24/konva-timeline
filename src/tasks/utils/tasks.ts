@@ -74,8 +74,6 @@ export const validateTasks = (
   timezone: string | undefined
 ): FilteredTasks => {
 
-  console.log('call filter task');
-
   const tz = timezone || "system";
   if (!range || !range.start || !range.end) {
     return { items: [], errors: [{ entity: "timeline", level: "warn", message: "Invalid range" }] };
@@ -246,6 +244,8 @@ export const onEndTimeRange = (
     }).toMillis();
   return { start, end };
 };
+
+
 
 export const connectedTasks = (
   taskData: TaskData,
