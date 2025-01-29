@@ -258,9 +258,9 @@ const Task = ({
       const yCoordinate = getTaskYCoordinate(resourceIndex, rowHeight);
       const point = { x: xCoordinate, y: yCoordinate };
 
-      setDragging(true);
+      // setDragging(true);
       ///ToolTip disappears
-      onLeave(taskId, point);
+      // onLeave(taskId, point);
     },
     [getDragPoint, onLeave, resources, rowHeight, taskId, dragSnapInPX]
   );
@@ -310,6 +310,7 @@ const Task = ({
 
       const { id: resourceId } = findResourceByCoordinate(y, rowHeight, resources);
       let time = onEndTimeRange(taskDimensions, resolution, columnWidth, interval);
+      console.log(time)
       // WorkTime logic
       time = workTime.onTaskResize(data.time, time, taskDimensions.handler!);
       // console.log(data, time)

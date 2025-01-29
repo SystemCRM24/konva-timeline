@@ -90,6 +90,31 @@ export class WorkTime {
     return false;
   }
 
+  onTaskDrag(taskTime: TimeRange, initialTime: TimeRange, newTime: TimeRange): TimeRange {
+    let taskStart = DateTime.fromMillis(taskTime.start as number);
+    let taskEnd = DateTime.fromMillis(taskTime.end as number);
+    const stepAbs = 60000;
+    let step = Duration.fromMillis(stepAbs);
+    let diff = Duration.fromMillis((newTime.start as number) - (initialTime.start as number));
+    if ( diff.milliseconds < 0 ) {
+      step = step.negate();
+      diff = diff.negate();
+    }
+    const diffAbs = diff.toMillis();
+    const calculate = (diff: number, date: DateTime): DateTime => {
+      while ( diff > 0 ) {
+        date = date.plus(step);
+        if ( this.dateOnWorkTime(date) || !(this.total.contains(date)) ) {
+          diff -= stepAbs;
+        }
+      }
+      return date;
+    }
+    taskStart = calculate(diffAbs, taskStart);
+    taskEnd = calculate(diffAbs, taskEnd);
+    return {start: taskStart.toMillis(), end: taskEnd.toMillis()};
+  }
+
   onTaskResize(oldTime: TimeRange, newTime: TimeRange,  direction: string): TimeRange {
     let start = DateTime.fromMillis(oldTime.start as number);
     let end = DateTime.fromMillis(oldTime.end as number);

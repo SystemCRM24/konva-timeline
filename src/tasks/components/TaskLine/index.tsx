@@ -349,7 +349,6 @@ const TaskLine = ({
     },
     [dragSnapInPX, getDragPoint, resources, finalPoint, rowHeight, taskDimensions, startPoint]
   );
-
   const onDragEnd = useCallback(
     (e: KonvaEventObject<DragEvent>) => {
       setDragging(false);
@@ -362,13 +361,14 @@ const TaskLine = ({
       const resourceIndex = findResourceIndexByCoordinate(y + taskHeight / 2, rowHeight, resources);
       const yCoordinate = getTaskYCoordinate(resourceIndex, rowHeight);
       const point = { x: xCoordinate, y: yCoordinate };
+      
       setTaskDimensions((dimensions) => ({ ...dimensions, ...point }));
 
       const { id: resourceId } = findResourceByCoordinate(y, rowHeight, resources);
       let time = onEndTimeRange(taskDimensions, resolution, columnWidth, interval);
       // WorkTime logic
-      time = workTime.onTaskResize(data.time, time, taskDimensions.handler!);
-      // console.log(data, time)
+      let initialTime = onEndTimeRange(initialTaskDimensions, resolution, columnWidth, interval);
+      time = workTime.onTaskDrag(data.time, initialTime, time);
       // end of this shit
       setFrontLine(false);
       setBackLine(false);
