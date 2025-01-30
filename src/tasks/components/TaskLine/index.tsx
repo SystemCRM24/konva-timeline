@@ -290,7 +290,7 @@ const TaskLine = ({
       const resourceIndex = findResourceIndexByCoordinate(y, rowHeight, resources);
       const yCoordinate = getTaskYCoordinate(resourceIndex, rowHeight);
       const point = { x: xCoordinate, y: yCoordinate };
-      ///ToolTip disappears
+      // ToolTip save
       onLeave(taskId, point);
       setDragging(true);
       const workLineArr = [];
@@ -344,11 +344,13 @@ const TaskLine = ({
       }
 
       const point = { x: controlledX, y: controlledY };
-
+      // Tooltip save
+      // onTaskOver(e);
       setTaskDimensions((dimensions) => ({ ...dimensions, ...point }));
     },
     [dragSnapInPX, getDragPoint, resources, finalPoint, rowHeight, taskDimensions, startPoint]
   );
+
   const onDragEnd = useCallback(
     (e: KonvaEventObject<DragEvent>) => {
       setDragging(false);
@@ -423,7 +425,7 @@ const TaskLine = ({
       const resourceIndex = findResourceIndexByCoordinate(y, rowHeight, resources);
       const yCoordinate = getTaskYCoordinate(resourceIndex, rowHeight);
       const point = { x: xCoordinate, y: yCoordinate };
-      onLeave(taskId, point);
+      // onLeave(taskId, point);
       setResizing(true);
       if (x > 0) {
         if (connectFrontLine) {

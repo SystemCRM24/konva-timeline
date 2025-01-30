@@ -26,20 +26,46 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
     rowHeight,
     theme: { color: themeColor },
     dateLocale,
+    workTime
   } = useTimelineContext();
 
   const cellLabel = useMemo(
     () => displayAboveInterval(column, unitAbove, dateLocale!),
     [column, unitAbove, dateLocale]
   );
+  
   const points = useMemo(() => [0, 0, 0, rowHeight], [rowHeight]);
+
+  // WorkTime logic
+  const daysInInterval = useMemo(() => {
+    let count = 0;
+    for ( const interval of workTime.intervals ) {
+      if ( column.intersection(interval) ) {
+        count += 1;
+      }
+    }
+    return count;
+  }, [index]);
+
+  const daysBeforeIntevalEnd = useMemo(() => {
+    let count = 0;
+    for ( const interval of workTime.intervals ) {
+      if ( !(interval.isBefore(column.end!)) ) {
+        return count;
+      }
+      count += 1;
+    }
+    return count;
+  }, [index]);
+  // end of this shit
 
   const unitAboveInUnitBelow = useMemo(() => {
     if (unitAbove === "month") {
       return Duration.fromObject({ ["day"]: dayInfo!.thisMonth }).as("week") / sizeInUnits;
     }
-    return Duration.fromObject({ [unitAbove]: 1 }).as(unit) / sizeInUnits / ((24 * 7) / (9 * 5));
-  }, [sizeInUnits, dayInfo, unitAbove, unit]);
+    // console.log(columnUnit);
+    return Duration.fromObject({ [unitAbove]: 1 }).as(unit) / sizeInUnits / ((24 * 7) / (9 * daysInInterval));;
+  }, [sizeInUnits, dayInfo, unitAbove, unit, index]);
 
   const unitAboveSpanInPx = useMemo(() => {
     return unitAboveInUnitBelow * columnWidth;
@@ -64,7 +90,6 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
 
       return pxUntil * columnWidth + unitAboveSpanInPx;
     }
-
     if (unitAbove === "day") {
       if (hourInfo!.backHour) {
         return index * unitAboveSpanInPx + columnWidth / sizeInUnits;
@@ -74,7 +99,6 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
         return index * unitAboveSpanInPx - columnWidth / sizeInUnits;
       }
     }
-
     if (unitAbove === "week") {
       if (hourInfo!.backHour) {
         return index * unitAboveSpanInPx + columnWidth / 24;
@@ -84,8 +108,9 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
         return index * unitAboveSpanInPx - columnWidth / 24;
       }
     }
-
-    return index * unitAboveSpanInPx;
+    // let res = index * unitAboveSpanInPx
+    const res = unitAboveSpanInPx / daysInInterval * daysBeforeIntevalEnd;
+    return res;
   }, [index, unitAboveSpanInPx, columnWidth, sizeInUnits, dayInfo, unitAbove, hourInfo]);
 
   const yPos = useMemo(() => rowHeight * 0.3, [rowHeight]);
@@ -103,14 +128,16 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
         return index * unitAboveSpanInPx - columnWidth / sizeInUnits;
       }
     }
-    return index * unitAboveSpanInPx;
+    return (unitAboveSpanInPx / daysInInterval * daysBeforeIntevalEnd) - unitAboveSpanInPx;
   }, [xPos, unitAboveSpanInPx, unitAbove, index, columnWidth, sizeInUnits, hourInfo]);
+
   const stroke = useMemo(() => {
     if (themeColor === "black") {
       return DEFAULT_STROKE_LIGHT_MODE;
     }
     return DEFAULT_STROKE_DARK_MODE;
   }, [themeColor]);
+
   return (
     <KonvaGroup key={`timeslot-${index}`}>
       <KonvaLine x={xPos} y={0} points={points} stroke={stroke} strokeWidth={1} />

@@ -1,10 +1,10 @@
-import React, { memo, useMemo } from "react";
+import React, { cloneElement, memo, useMemo } from "react";
 import { Interval } from "luxon";
 
 import { KonvaGroup, KonvaLine, KonvaText } from "../../@konva";
 import { useTimelineContext } from "../../timeline/TimelineContext";
 import { DEFAULT_STROKE_DARK_MODE, DEFAULT_STROKE_LIGHT_MODE } from "../../utils/theme";
-import { displayInterval } from "../../utils/time-resolution";
+import { daysInMonth, displayInterval } from "../../utils/time-resolution";
 
 interface GridCellProps {
   column: Interval;
@@ -27,14 +27,29 @@ const GridCell = ({ column, height, index, hourInfo: visibleDayInfo }: GridCellP
     theme: { color: themeColor },
   } = useTimelineContext();
 
+
   const cellLabel = useMemo(
     () => displayInterval(column, resolutionUnit, dateLocale!),
     [column, resolutionUnit, dateLocale]
   );
 
+
+  // WorkTime logic
+  const shifts = useMemo(() => {
+    switch ( resolution.label ) {
+      case "1 Hour":
+        return {divider: 4, label: 0};
+      case "1 Day":
+        return {divider: 24 / 9, label: 140};
+      case "1 Week":
+      default:
+        return {divider: 1.25, label: 150};
+    }
+  }, [resolution.label]);
+
   const xPos = useMemo(() => {
     if (resolutionUnit === "day") {
-      if (visibleDayInfo.backHour) {
+      if ( visibleDayInfo.backHour ) {
         return columnWidth * (index + blocksOffset) + columnWidth / 24;
       }
       if (visibleDayInfo.nextHour) {
@@ -49,28 +64,9 @@ const GridCell = ({ column, height, index, hourInfo: visibleDayInfo }: GridCellP
         return columnWidth * (index + blocksOffset) - columnWidth / 168;
       }
     }
-    // WorkTime logic
-    let divider;
-    switch (resolution.label) {
-      // case "1 Minute":
-      // case "5 Minutes":
-      // case "10 Minutes":
-      // case "15 Minutes":
-      // case "30 Minutes":
-      // case "1 Hour":
-      // case "2 Hours":
-      // case "1/4 of Day":
-      // case "1/2 of Day":
-      case "1 Day":
-        divider = 24 / 9;
-        break;
-      // case "1 Week":
-      // case "2 Weeks":
-      default:
-        divider = 1;
-    }
-    return (columnWidth * (index + blocksOffset)) / divider;
+    return columnWidth * (index + blocksOffset) / shifts.divider;
   }, [blocksOffset, columnWidth, index, visibleDayInfo, resolutionUnit, resolution]);
+
 
   const yPos = useMemo(() => rowHeight * 0.8, [rowHeight]);
 
@@ -84,7 +80,7 @@ const GridCell = ({ column, height, index, hourInfo: visibleDayInfo }: GridCellP
   return (
     <KonvaGroup key={`timeslot-${index}`}>
       <KonvaLine x={xPos} y={yPos} points={[0, 0, 0, height]} stroke={stroke} strokeWidth={1} />
-      <KonvaText fill={themeColor} x={xPos - 150} y={yPos - 8} text={cellLabel} width={columnWidth} align="center" />
+      <KonvaText fill={themeColor} x={xPos - shifts.label} y={yPos - 8} text={cellLabel} width={columnWidth} align="center" />
     </KonvaGroup>
   );
 };
