@@ -220,7 +220,8 @@ const Timeline: FC<TimelineProps> = () => {
     const timeEnd = DateTime.fromMillis(externalRangeInMillis.end);
     let endOffsetInUnit = timeEnd.diff(interval.start!);
     // WorkTime logic
-    endOffsetInUnit = endOffsetInUnit.minus(workTime.calcNonWorkDuration(interval.end!, interval.start!));
+    const nonWorkTime = workTime.calcNonWorkDuration(interval.end!, interval.start!)
+    endOffsetInUnit = endOffsetInUnit.minus(nonWorkTime);
     // Back to main
     const res = (endOffsetInUnit.as(resolution.unit) * columnWidth) / resolution.sizeInUnits;
     return res;

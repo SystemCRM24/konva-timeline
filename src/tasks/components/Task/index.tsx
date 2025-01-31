@@ -374,22 +374,22 @@ const Task = ({
         switch (handler) {
           case "rx":
             if (handlerX <= taskX + TASK_BORDER_RADIUS) {
-              return { ...taskDimensions };
+              return { ...taskDimensions, handler };
             }
             if (handlerX >= finalPoint) {
-              return { ...taskDimensions, width: finalPoint - taskX };
+              return { ...taskDimensions, width: finalPoint - taskX, handler };
             }
 
-            return { ...taskDimensions, width: handlerX - taskX };
+            return { ...taskDimensions, width: handlerX - taskX, handler };
           case "lx":
             if (handlerX >= taskEndX - TASK_BORDER_RADIUS) {
-              return { ...taskDimensions };
+              return { ...taskDimensions, handler };
             }
             if (handlerX <= startPoint) {
-              return { ...taskDimensions };
+              return { ...taskDimensions, handler };
             }
 
-            return { ...taskDimensions, x: handlerX, width: taskEndX - handlerX };
+            return { ...taskDimensions, x: handlerX, width: taskEndX - handlerX, handler };
         }
       });
     },
@@ -409,7 +409,7 @@ const Task = ({
       // WorkTime logic
       time = workTime.onTaskResize(data.time, time, taskDimensions.handler!);
       // console.log(data, time)
-      data.time = time;
+      // data.time = time;
       // end of this shit
       onTaskChange({ ...data, time }, {coords: {x, y}});
     },

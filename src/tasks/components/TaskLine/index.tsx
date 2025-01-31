@@ -504,7 +504,7 @@ const TaskLine = ({
       // WorkTime logic
       time = workTime.onTaskResize(data.time, time, taskDimensions.handler!);
       // console.log(data, time)
-      data.time = time;
+      // data.time = time;
       // end of this shit
       workLine && workLine([]);
       if (enableLines && data.relatedTasks && frontLine) {
