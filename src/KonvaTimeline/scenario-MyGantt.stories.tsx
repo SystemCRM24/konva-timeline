@@ -55,6 +55,7 @@ export const Line: Story = {
           start: "2025-01-13T09:00:00+03:00",
           end: "2025-01-13T18:00:00+03:00",
         },
+        taskColor: "#dc3545",
       },
       {
         id: "2",

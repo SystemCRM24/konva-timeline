@@ -120,7 +120,6 @@ const LayerLine: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip, create, o
           const endY = getTaskYCoordinate(endResourceIndex, rowHeight) + (rowHeight * TASK_HEIGHT_OFFSET) / 2;
           const startLine = getTaskXCoordinate(data.start);
           const endLine = getTaskXCoordinate(data.end);
-
           return (
             <LineKonva
               key={`Layer${data.id}`}
@@ -143,8 +142,8 @@ const LayerLine: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip, create, o
         if (resourceIndex < 0) {
           return null;
         }
-
         const { color: resourceColor, toCompleteColor } = resources[resourceIndex];
+        const taskColor = taskData.taskColor || resourceColor;
         const xCoordinate = getTaskXCoordinate(time.start);
         const yCoordinate = getTaskYCoordinate(resourceIndex, rowHeight);
         const width = getTaskWidth(time);
@@ -155,7 +154,7 @@ const LayerLine: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip, create, o
           <TaskLine
             key={`task-${taskData.id}`}
             data={taskData}
-            fill={resourceColor}
+            fill={taskColor}
             fillToComplete={toCompleteColor}
             onLeave={onTaskLeave}
             onOver={onTaskOver}
