@@ -405,19 +405,23 @@ export const TimelineProvider = ({
       return [];
     }
 
-    let startIndex = timeblocksOffset;
-    if (startIndex > TIME_BLOCKS_PRELOAD) {
-      startIndex = timeblocksOffset - TIME_BLOCKS_PRELOAD;
-    }
+    // let startIndex = timeblocksOffset;
+    // if (startIndex > TIME_BLOCKS_PRELOAD) {
+    //   startIndex = timeblocksOffset - TIME_BLOCKS_PRELOAD;
+    // }
+    // const startIndex = timeblocksOffset;
 
-    let endIndex = Math.ceil(drawRange.end / columnWidth);
-    if (endIndex < timeBlocks.length - TIME_BLOCKS_PRELOAD) {
-      endIndex = endIndex + TIME_BLOCKS_PRELOAD;
-    }
+    // let endIndex = Math.ceil(drawRange.end / columnWidth);
+    // if (endIndex <= timeBlocks.length) {
+    //   endIndex = endIndex + (TIME_BLOCKS_PRELOAD * 2);
+    // }
+    
+    // const endIndex = Math.ceil(drawRange.end / columnWidth);
 
-    const vtbs = [...timeBlocks].slice(timeblocksOffset);
-    const end = DateTime.now().toMillis();
-    logDebug("TimelineProvider", `Visible time blocks calculation took ${end - start} ms`);
+    // console.log(drawRange, timeBlocks);
+    const vtbs = [...timeBlocks];
+    // const vtbs = [...timeBlocks];
+    logDebug("TimelineProvider", `Visible time blocks calculation took ${DateTime.now().toMillis() - start} ms`);
     return vtbs;
   }, [timeblocksOffset, columnWidth, drawRange, timeBlocks, TIME_BLOCKS_PRELOAD]);
 

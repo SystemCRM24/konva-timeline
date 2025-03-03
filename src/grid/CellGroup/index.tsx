@@ -63,10 +63,10 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
     switch ( unitAbove ) {
       case 'day':
         return 9 / sizeInUnits;
+      case 'week':
+        return Duration.fromObject({ [unitAbove]: 1 }).as(unit) / sizeInUnits / ((24 * 7) / (9 * daysInInterval));
       case 'month':
         return Duration.fromObject({ ["day"]: dayInfo!.thisMonth }).as("week") / sizeInUnits;
-      case 'week':
-        Duration.fromObject({ [unitAbove]: 1 }).as(unit) / sizeInUnits / ((24 * 7) / (9 * daysInInterval));
       default:
         return Duration.fromObject({ [unitAbove]: 1 }).as(unit) / sizeInUnits;
     }
