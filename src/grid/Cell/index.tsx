@@ -38,7 +38,7 @@ const GridCell = ({ column, height, index, hourInfo: visibleDayInfo }: GridCellP
   const shifts = useMemo(() => {
     switch ( resolution.label ) {
       case "1 Hour":
-        return {divider: 4, label: 0};
+        return {divider: 1, label: 0};
       case "1 Day":
         return {divider: 24 / 9, label: 140};
       case "1 Week":
@@ -64,7 +64,8 @@ const GridCell = ({ column, height, index, hourInfo: visibleDayInfo }: GridCellP
         return columnWidth * (index + blocksOffset) - columnWidth / 168;
       }
     }
-    return columnWidth * (index + blocksOffset) / shifts.divider;
+    const res = columnWidth * (index + blocksOffset) / shifts.divider;
+    return res;
   }, [blocksOffset, columnWidth, index, visibleDayInfo, resolutionUnit, resolution]);
 
 

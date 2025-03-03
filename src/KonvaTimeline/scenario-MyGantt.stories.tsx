@@ -35,15 +35,15 @@ export const Line: Story = {
   args: {
     onAreaSelect: undefined,
     resources,
-    resolution: "1day",
+    resolution: "1hrs",
     enableLines: true,
     toolTip: true,
     displayTasksLabel: true,
     onTaskClick: (task) => task,
-    initialDateTime: "2025-01-13T13:00:00+03:00",
+    initialDateTime: undefined,
     range: {
-      start: "2025-01-06T00:00:00+03:00",
-      end: "2025-01-26T23:59:59+03:00",
+      start: "2025-02-24T00:00:00+03:00",
+      end: "2025-03-16T23:59:59+03:00",
     },
     workIntervals: data,
     tasks: [
@@ -52,8 +52,8 @@ export const Line: Story = {
         label: "Полностью 1 день",
         resourceId: "1",
         time: {
-          start: "2025-01-13T09:00:00+03:00",
-          end: "2025-01-13T18:00:00+03:00",
+          start: "2025-03-04T09:00:00+03:00",
+          end: "2025-03-04T18:00:00+03:00",
         },
         taskColor: "#dc3545",
       },
@@ -62,8 +62,8 @@ export const Line: Story = {
         label: "Часть одного дня",
         resourceId: "2",
         time: {
-          start: "2025-01-14T09:30:00+03:00",
-          end: "2025-01-14T12:00:00+03:00",
+          start: "2025-03-05T09:30:00+03:00",
+          end: "2025-03-05T12:00:00+03:00",
         },
       },
       {
@@ -71,8 +71,8 @@ export const Line: Story = {
         label: "C одного дня на другой",
         resourceId: "2",
         time: {
-          start: "2025-01-14T12:00:00+03:00",
-          end: "2025-01-15T10:15:00+03:00",
+          start: "2025-03-05T12:00:00+03:00",
+          end: "2025-03-06T10:15:00+03:00",
         },
       },
       {
@@ -80,8 +80,8 @@ export const Line: Story = {
         label: "Следует визуально за первой задачей",
         resourceId: "1",
         time: {
-          start: "2025-01-14T09:00:00+03:00",
-          end: "2025-01-14T18:00:00+03:00",
+          start: "2025-03-05T09:00:00+03:00",
+          end: "2025-03-05T18:00:00+03:00",
         },
       },
       {
@@ -89,13 +89,12 @@ export const Line: Story = {
         label: "На 3 дня",
         resourceId: "3",
         time: {
-          start: "2025-01-13T09:00:00+03:00",
-          end: "2025-01-15T18:00:00+03:00",
+          start: "2025-03-04T09:00:00+03:00",
+          end: "2025-03-06T18:00:00+03:00",
         },
       },
     ],
     onTaskChange: (task, opts) => {
-      console.log(task, opts);
       task.id, opts;
     },
   },

@@ -60,11 +60,18 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
   // end of this shit
 
   const unitAboveInUnitBelow = useMemo(() => {
-    if (unitAbove === "month") {
-      return Duration.fromObject({ ["day"]: dayInfo!.thisMonth }).as("week") / sizeInUnits;
+    switch ( unitAbove ) {
+      case 'day':
+        // console.log(Duration.fromObject({ [unitAbove]: 1 }).as(unit) / sizeInUnits);
+        return 9;
+      case 'month':
+        return Duration.fromObject({ ["day"]: dayInfo!.thisMonth }).as("week") / sizeInUnits;
+      case 'week':
+        Duration.fromObject({ [unitAbove]: 1 }).as(unit) / sizeInUnits / ((24 * 7) / (9 * daysInInterval));
+      default:
+        return Duration.fromObject({ [unitAbove]: 1 }).as(unit) / sizeInUnits;
     }
     // console.log(columnUnit);
-    return Duration.fromObject({ [unitAbove]: 1 }).as(unit) / sizeInUnits / ((24 * 7) / (9 * daysInInterval));;
   }, [sizeInUnits, dayInfo, unitAbove, unit, index]);
 
   const unitAboveSpanInPx = useMemo(() => {
@@ -109,8 +116,14 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
       }
     }
     // let res = index * unitAboveSpanInPx
-    const res = unitAboveSpanInPx / daysInInterval * daysBeforeIntevalEnd;
-    return res;
+    switch ( unitAbove ) {
+      case 'day':
+        // console.log(unitAboveSpanInPx, );
+        return unitAboveSpanInPx * (daysInInterval * daysBeforeIntevalEnd);
+      case 'week':
+      default:
+        return unitAboveSpanInPx / daysInInterval * daysBeforeIntevalEnd;
+    }
   }, [index, unitAboveSpanInPx, columnWidth, sizeInUnits, dayInfo, unitAbove, hourInfo]);
 
   const yPos = useMemo(() => rowHeight * 0.3, [rowHeight]);
@@ -128,7 +141,8 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
         return index * unitAboveSpanInPx - columnWidth / sizeInUnits;
       }
     }
-    return (unitAboveSpanInPx / daysInInterval * daysBeforeIntevalEnd) - unitAboveSpanInPx;
+    const res = (unitAboveSpanInPx / daysInInterval * daysBeforeIntevalEnd) - unitAboveSpanInPx;
+    return res;
   }, [xPos, unitAboveSpanInPx, unitAbove, index, columnWidth, sizeInUnits, hourInfo]);
 
   const stroke = useMemo(() => {
@@ -146,7 +160,7 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
         fill={themeColor}
         x={xPosLabel}
         y={yPos - 8}
-        text={cellLabel}
+        text={xPosLabel !== Infinity ? cellLabel: ''}
         width={unitAboveSpanInPx}
       />
     </KonvaGroup>
