@@ -75,7 +75,7 @@ const LayerLine: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip, create, o
       const timeStart = DateTime.fromMillis(startTime);
       let startOffsetInUnit = timeStart.diff(intervalStart!);
       // WorkTime logic
-      const nonWorkTimeDiff = workTime.calcOuterNonWorkDuration(timeStart, resolution.unit);
+      const nonWorkTimeDiff = workTime.calcOuterNonWorkDuration(timeStart, 'day');
       startOffsetInUnit = startOffsetInUnit.minus(nonWorkTimeDiff);
       // end
       const res = getXCoordinate(startOffsetInUnit.as(resolution.unit));
