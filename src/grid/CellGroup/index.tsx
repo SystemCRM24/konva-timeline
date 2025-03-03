@@ -62,8 +62,7 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
   const unitAboveInUnitBelow = useMemo(() => {
     switch ( unitAbove ) {
       case 'day':
-        // console.log(Duration.fromObject({ [unitAbove]: 1 }).as(unit) / sizeInUnits);
-        return 9;
+        return 9 / sizeInUnits;
       case 'month':
         return Duration.fromObject({ ["day"]: dayInfo!.thisMonth }).as("week") / sizeInUnits;
       case 'week':
@@ -71,7 +70,6 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
       default:
         return Duration.fromObject({ [unitAbove]: 1 }).as(unit) / sizeInUnits;
     }
-    // console.log(columnUnit);
   }, [sizeInUnits, dayInfo, unitAbove, unit, index]);
 
   const unitAboveSpanInPx = useMemo(() => {
@@ -118,8 +116,7 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
     // let res = index * unitAboveSpanInPx
     switch ( unitAbove ) {
       case 'day':
-        // console.log(unitAboveSpanInPx, );
-        return unitAboveSpanInPx * (daysInInterval * daysBeforeIntevalEnd);
+        return unitAboveSpanInPx * daysInInterval * daysBeforeIntevalEnd;
       case 'week':
       default:
         return unitAboveSpanInPx / daysInInterval * daysBeforeIntevalEnd;

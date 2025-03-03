@@ -33,11 +33,11 @@ const GridCell = ({ column, height, index, hourInfo: visibleDayInfo }: GridCellP
     [column, resolutionUnit, dateLocale]
   );
 
-
   // WorkTime logic
   const shifts = useMemo(() => {
     switch ( resolution.label ) {
       case "1 Hour":
+      case "3 Hours":
         return {divider: 1, label: 0};
       case "1 Day":
         return {divider: 24 / 9, label: 140};

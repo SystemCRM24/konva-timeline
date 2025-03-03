@@ -12,6 +12,7 @@ export type Resolution =
   | "30min"
   | "1hrs"
   | "2hrs"
+  | "3hrs"
   | "6hrs"
   | "12hrs"
   | "1day"
@@ -80,6 +81,13 @@ const RESOLUTIONS_DATA: ResolutionsData = {
     unit: "hour",
     unitAbove: "day",
   },
+  "3hrs": {
+    columnSize: DEFAULT_GRID_COLUMN_WIDTH,
+    label: "3 Hours",
+    sizeInUnits: 3,
+    unit: "hour",
+    unitAbove: "day",
+  },
   "6hrs": {
     columnSize: DEFAULT_GRID_COLUMN_WIDTH * 2,
     label: "1/4 of Day",
@@ -125,6 +133,7 @@ export const RESOLUTIONS: Resolution[] = [
   "30min",
   "1hrs",
   "2hrs",
+  "3hrs",
   "6hrs",
   "12hrs",
   "1day",
