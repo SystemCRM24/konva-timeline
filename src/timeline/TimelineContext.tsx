@@ -393,35 +393,36 @@ export const TimelineProvider = ({
       : externalColumnWidth;
   }, [externalColumnWidth, resolution]);
 
-  const timeblocksOffset = useMemo(() => Math.floor(drawRange.start / columnWidth), [drawRange, columnWidth]);
+  const timeblocksOffset = useMemo(
+    () => {
+      console.log(Math.floor(drawRange.start / columnWidth));
+      return Math.floor(drawRange.start / columnWidth);
+    }, 
+    [drawRange, columnWidth]
+  );
 
   // Отображаемые блоки. Сделано для оптимизации. 
   // правая граница (endIndex) убрана из среза.
   const visibleTimeBlocks = useMemo(() => {
-    logDebug("TimelineProvider", "Calculating visible time blocks...");
-    const start = DateTime.now().toMillis();
     const rangeLength = drawRange.end - drawRange.start;
     if (rangeLength <= 0) {
       return [];
     }
-
-    // let startIndex = timeblocksOffset;
     // if (startIndex > TIME_BLOCKS_PRELOAD) {
     //   startIndex = timeblocksOffset - TIME_BLOCKS_PRELOAD;
     // }
     // const startIndex = timeblocksOffset;
 
-    // let endIndex = Math.ceil(drawRange.end / columnWidth);
-    // if (endIndex <= timeBlocks.length) {
-    //   endIndex = endIndex + (TIME_BLOCKS_PRELOAD * 2);
-    // }
+    let endIndex = Math.ceil(drawRange.end / columnWidth);
+    if (endIndex < timeBlocks.length - TIME_BLOCKS_PRELOAD) {
+      endIndex = endIndex + TIME_BLOCKS_PRELOAD;
+    }
     
     // const endIndex = Math.ceil(drawRange.end / columnWidth);
 
     // console.log(drawRange, timeBlocks);
-    const vtbs = [...timeBlocks];
+    const vtbs = [...timeBlocks].slice(timeblocksOffset, endIndex + 2);
     // const vtbs = [...timeBlocks];
-    logDebug("TimelineProvider", `Visible time blocks calculation took ${DateTime.now().toMillis() - start} ms`);
     return vtbs;
   }, [timeblocksOffset, columnWidth, drawRange, timeBlocks, TIME_BLOCKS_PRELOAD]);
 
@@ -429,7 +430,7 @@ export const TimelineProvider = ({
     let range = null;
     if (visibleTimeBlocks && visibleTimeBlocks.length) {
       range = {
-        start: visibleTimeBlocks[0].start!.toMillis(),
+        start: visibleTimeBlocks[0].start!.toMillis() - (4 * 86400000),
         end: visibleTimeBlocks[visibleTimeBlocks.length - 1].end!.toMillis(),
       };
     }
