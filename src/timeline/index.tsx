@@ -212,6 +212,7 @@ const Timeline: FC<TimelineProps> = () => {
     // Back to main
     // console.log(startOffsetInUnit);
     const res = (startOffsetInUnit.as(resolution.unit) * columnWidth) / resolution.sizeInUnits;
+    console.log(res);
     return res;
   }, [externalRangeInMillis, columnWidth, resolution, interval]);
 

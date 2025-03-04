@@ -395,7 +395,6 @@ export const TimelineProvider = ({
 
   const timeblocksOffset = useMemo(
     () => {
-      console.log(Math.floor(drawRange.start / columnWidth));
       return Math.floor(drawRange.start / columnWidth);
     }, 
     [drawRange, columnWidth]
