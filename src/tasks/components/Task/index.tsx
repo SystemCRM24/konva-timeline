@@ -310,7 +310,7 @@ const Task = ({
 
       const { id: resourceId } = findResourceByCoordinate(y, rowHeight, resources);
       let time = onEndTimeRange(taskDimensions, resolution, columnWidth, interval);
-      console.log(time)
+      // console.log(time)
       // WorkTime logic
       let initialTime = onEndTimeRange(initialTaskDimensions, resolution, columnWidth, interval);
       time = workTime.onTaskDrag(data.time, initialTime, time);
