@@ -414,13 +414,15 @@ export const TimelineProvider = ({
 
     let endIndex = Math.ceil(drawRange.end / columnWidth);
     if (endIndex < timeBlocks.length - TIME_BLOCKS_PRELOAD) {
+      console.log('sssss')
       endIndex = endIndex + TIME_BLOCKS_PRELOAD;
     }
     
     // const endIndex = Math.ceil(drawRange.end / columnWidth);
+    const toAdd = Math.ceil(workIntervals.length / 2) + 1;
 
-    // console.log(drawRange, timeBlocks);
-    const vtbs = [...timeBlocks].slice(timeblocksOffset, endIndex + 2);
+    // console.log(endIndex, toAdd);
+    const vtbs = [...timeBlocks].slice(timeblocksOffset, endIndex + toAdd);
     // const vtbs = [...timeBlocks];
     return vtbs;
   }, [timeblocksOffset, columnWidth, drawRange, timeBlocks, TIME_BLOCKS_PRELOAD]);
@@ -433,6 +435,7 @@ export const TimelineProvider = ({
         end: visibleTimeBlocks[visibleTimeBlocks.length - 1].end!.toMillis(),
       };
     }
+    console.log(range);
     return range;
   }, [visibleTimeBlocks]);
 
