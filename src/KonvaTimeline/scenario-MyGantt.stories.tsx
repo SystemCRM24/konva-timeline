@@ -35,7 +35,7 @@ export const Line: Story = {
   args: {
     onAreaSelect: undefined,
     resources,
-    resolution: "1hrs",
+    resolution: "1day",
     enableLines: true,
     toolTip: true,
     displayTasksLabel: true,
@@ -46,6 +46,7 @@ export const Line: Story = {
       end: "2025-03-16T23:59:59+03:00",
     },
     workIntervals: data,
+    isoNow: '2025-03-04T10:00:00+03:00',
     tasks: [
       {
         id: "1",

@@ -46,4 +46,8 @@ export type TimelineInput = {
    * list of work intervals
    */
   workIntervals: RawInterval[];
+  /**
+   * now - string in ISO format that presents now
+   */
+  isoNow?: string;
 };

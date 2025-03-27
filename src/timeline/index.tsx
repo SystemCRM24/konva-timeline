@@ -21,6 +21,7 @@ import {
 } from "../tasks/utils/tasks";
 import { logDebug } from "../utils/logger";
 
+import NowLine from "../grid/NowLine";
 import { useTimelineContext } from "./TimelineContext";
 
 interface TimelineProps {}
@@ -350,6 +351,11 @@ const Timeline: FC<TimelineProps> = () => {
             onMouseMove={onMouseMove}
           >
             <GridLayer height={stageHeight} />
+            <NowLine
+              rowHeight={rowHeight}
+              columnWidth={columnWidth}
+              stageHeight={stageHeight}
+            />
             {!enableLines ? (
               <TasksLayer
                 taskTooltip={taskTooltip}

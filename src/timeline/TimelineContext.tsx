@@ -199,6 +199,7 @@ type TimelineContextType = Required<
   summaryHeader?: string;
   customResources?: (resourceData: CustomRes) => React.JSX.Element;
   workTime: WorkTime;
+  now: DateTime;
 };
 
 const TimelineContext = createContext<TimelineContextType | undefined>(undefined);
@@ -224,7 +225,6 @@ export const TimelineProvider = ({
   range: externalRange,
   resolution: externalResolution = "1hrs",
   resources: externalResources,
-  workIntervals,
   rowHeight: externalRowHeight,
   timezone: externalTimezone,
   theme: externalTheme = "light",
@@ -245,9 +245,22 @@ export const TimelineProvider = ({
   showSummary,
   summaryHeader,
   customResources,
+  workIntervals,
+  isoNow,
 }: TimelineProviderProps) => {
   // WorkTime logic
   const workTime = useMemo(() => new WorkTime(workIntervals), [workIntervals]);
+
+  const now = useMemo(
+    () => {
+      let dt = DateTime.fromISO(isoNow as string);
+      if ( !dt.isValid ) {
+        dt = DateTime.local();
+      }
+      return dt;
+    },
+    [isoNow]
+  );
 
   const timezone = useMemo(() => {
     if (!externalTimezone) {
@@ -538,6 +551,7 @@ export const TimelineProvider = ({
         resolutionKey: externalResolution,
         resources,
         workTime,
+        now,
         resourcesContentHeight,
         rowHeight,
         setDrawRange,
