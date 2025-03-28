@@ -95,7 +95,8 @@ const Task = ({
     rowHeight,
     drawRange,
     enableTaskPattern,
-    workTime
+    workTime,
+    now
   } = useTimelineContext();
 
   const { id: taskId, completedPercentage } = data;
@@ -108,23 +109,23 @@ const Task = ({
 
   const deadline = useMemo(
     () => {
-      console.log(data);
+      return data.deadline < data.time.end ? data.deadline : data.time.end;
     },
-    [data.deadline]
+    [data]
   );
 
   const mainColor = useMemo(() => {
-    console.log(deadline);
     if (disabled) {
       return DISABLED_TASK_DEFAULT_FILL;
     }
     try {
-      const rgb = getRGB(fill);
+      const taskColor = deadline as number > now.toMillis() ? fill : '#dc3545';
+      const rgb = getRGB(taskColor);
       return ` rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
     } catch (error) {
       return INVALIDFILL_TASK_DEFAULT_FILL;
     }
-  }, [fill, disabled, data, deadline]);
+  }, [fill, disabled, deadline, now]);
 
   const mainStroke = useMemo(() => {
     if (disabled) {

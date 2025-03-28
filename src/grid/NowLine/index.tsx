@@ -34,7 +34,7 @@ const NowLine = ({rowHeight, stageHeight, columnWidth}: NowLineProps) => {
   );
 
   const text = useMemo(
-    () => now.toISOTime()?.slice(0, 8),
+    () => now.toISOTime()?.slice(0, 5),
     [now]
   );
 

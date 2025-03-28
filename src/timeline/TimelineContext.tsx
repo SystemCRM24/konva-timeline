@@ -1,4 +1,4 @@
-import React, { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { DateTime, Interval } from "luxon";
 
 import { addHeaderResource, Resource } from "../resources/utils/resources";
@@ -252,22 +252,26 @@ export const TimelineProvider = ({
   const workTime = useMemo(() => new WorkTime(workIntervals), [workIntervals]);
 
   const zone = {zone: 'Europe/Moscow'};
+
   const [now, setNow] = useState(DateTime.local(zone));
+  const [delay, setDelay] = useState(0);
+
+  const updateNow = useCallback(
+    () => {
+      const currentTime = DateTime.local(zone);
+      const currentDelay = (60 - currentTime.second) * 1000 - currentTime.millisecond;
+      setDelay(currentDelay);
+      setNow(currentTime);
+    },
+    []
+  );
 
   useEffect(
     () => {
-      const updateNow = () => setNow(DateTime.local(zone));
-      const delay = (60 - now.second) * 1000 - now.millisecond;
-      const timer = setTimeout(
-        () => {
-          updateNow();
-          setInterval(updateNow, 60000);
-        },
-        delay
-      );
-      return () => clearTimeout(timer);
+      const timeOut = setTimeout(updateNow, delay)
+      return () => clearTimeout(timeOut);
     },
-    []
+    [delay]
   );
 
   const timezone = useMemo(() => {
