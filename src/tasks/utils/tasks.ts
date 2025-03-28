@@ -1,7 +1,7 @@
 import { DateTime, Duration, Interval } from "luxon";
 
 import { KonvaTimelineError, Operation } from "../../utils/operations";
-import { getValidTime, InternalTimeRange, TimeRange } from "../../utils/time";
+import { getValidTime, InternalTimeRange, TimeRange, TimeInput } from "../../utils/time";
 import { ResolutionData } from "../../utils/time-resolution";
 
 export interface TaskData<T extends TimeRange = TimeRange> {
@@ -30,9 +30,9 @@ export interface TaskData<T extends TimeRange = TimeRange> {
    */
   relatedTasks?: string[];
   /**
-   * Color of the single task
+   * Deadline of this task
    */
-  taskColor?: string;
+  deadline: TimeInput;
 }
 
 type FilteredTasks = Operation<TaskData<InternalTimeRange>>;
@@ -92,6 +92,7 @@ export const validateTasks = (
           start: getValidTime(task.time.start, tz),
           end: getValidTime(task.time.end, tz),
         },
+        deadline: getValidTime(task.deadline, tz),
       })
     )
     .filter(({ id: taskId, time: { start: taskStart, end: taskEnd } }) => {

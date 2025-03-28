@@ -251,15 +251,23 @@ export const TimelineProvider = ({
   // WorkTime logic
   const workTime = useMemo(() => new WorkTime(workIntervals), [workIntervals]);
 
-  const now = useMemo(
+  const zone = {zone: 'Europe/Moscow'};
+  const [now, setNow] = useState(DateTime.local(zone));
+
+  useEffect(
     () => {
-      let dt = DateTime.fromISO(isoNow as string);
-      if ( !dt.isValid ) {
-        dt = DateTime.local();
-      }
-      return dt;
+      const updateNow = () => setNow(DateTime.local(zone));
+      const delay = (60 - now.second) * 1000 - now.millisecond;
+      const timer = setTimeout(
+        () => {
+          updateNow();
+          setInterval(updateNow, 60000);
+        },
+        delay
+      );
+      return () => clearTimeout(timer);
     },
-    [isoNow]
+    []
   );
 
   const timezone = useMemo(() => {

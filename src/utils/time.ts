@@ -3,7 +3,7 @@ import { DateTime, Interval } from "luxon";
 import { logError } from "./logger";
 import { ResolutionData } from "./time-resolution";
 
-type TimeInput = number | string | Date;
+export type TimeInput = number | string | Date;
 
 export interface TimeRange {
   /**

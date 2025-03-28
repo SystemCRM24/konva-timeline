@@ -1,4 +1,4 @@
-import React, {useCallback} from "react";
+import React, {useCallback, useMemo} from "react";
 import { Layer } from "react-konva";
 import { KonvaLine, KonvaText } from "../../@konva";
 
@@ -20,24 +20,23 @@ const NowLine = ({rowHeight, stageHeight, columnWidth}: NowLineProps) => {
     now,
   } = useTimelineContext();
 
-  const getXCoordinate = useCallback(
-    (offset: number) => (offset * columnWidth) / resolution.sizeInUnits,
-    [columnWidth, resolution.sizeInUnits]
-  );
-  
-  const getLineXCoordinate = useCallback(
+  const x = useMemo(
     () => {
-      const timeStart = now;
-      let startOffsetInUnit = timeStart.diff(intervalStart!);
+      let startOffsetInUnit = now.diff(intervalStart!);
       // WorkTime logic
       const nonWorkTimeDiff = workTime.calcOuterNonWorkDuration(now, 'day');
       startOffsetInUnit = startOffsetInUnit.minus(nonWorkTimeDiff);
       // end
-      return getXCoordinate(startOffsetInUnit.as(resolution.unit));
+      const offset = startOffsetInUnit.as(resolution.unit);
+      return (offset * columnWidth) / resolution.sizeInUnits;
     },
-    [getXCoordinate, intervalStart, resolution.unit]
+    [now, intervalStart, resolution.unit, columnWidth, resolution.sizeInUnits]
   );
-  const x = getLineXCoordinate();
+
+  const text = useMemo(
+    () => now.toISOTime()?.slice(0, 8),
+    [now]
+  );
 
   return (
     <Layer>
@@ -53,7 +52,7 @@ const NowLine = ({rowHeight, stageHeight, columnWidth}: NowLineProps) => {
         fill="red" 
         x={x} 
         y={rowHeight * 0.8 - 20} 
-        text={now.toISOTime()?.slice(0, 5)} 
+        text={text} 
         width={columnWidth}
       />
     </Layer>

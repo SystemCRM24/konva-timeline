@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { DateTime } from "luxon";
 
 import DecoratoGantt from "../utils/stories/decorators/Gantt";
 import { generateStoryData } from "../utils/stories/utils";
@@ -42,8 +43,8 @@ export const Line: Story = {
     onTaskClick: (task) => task,
     initialDateTime: undefined,
     range: {
-      start: "2025-02-24T00:00:00+03:00",
-      end: "2025-03-16T23:59:59+03:00",
+      start: "2025-03-24T00:00:00+03:00",
+      end: "2025-04-13T23:59:59+03:00",
     },
     workIntervals: data,
     isoNow: '2025-03-04T10:00:00+03:00',
@@ -53,46 +54,50 @@ export const Line: Story = {
         label: "Полностью 1 день",
         resourceId: "1",
         time: {
-          start: "2025-03-04T09:00:00+03:00",
-          end: "2025-03-04T18:00:00+03:00",
+          start: "2025-03-28T09:00:00+03:00",
+          end: "2025-03-28T10:54:00+03:00",
         },
-        taskColor: "#dc3545",
+        deadline: "2025-03-29T00:00:00+03:00",
       },
       {
         id: "2",
         label: "Часть одного дня",
         resourceId: "2",
         time: {
-          start: "2025-03-05T09:30:00+03:00",
-          end: "2025-03-05T12:00:00+03:00",
+          start: "2025-04-03T09:30:00+03:00",
+          end: "2025-04-03T12:00:00+03:00",
         },
+        deadline: DateTime.fromISO("2025-03-29T00:00:00+03:00").toMillis(),
       },
       {
         id: "3",
         label: "C одного дня на другой",
         resourceId: "2",
         time: {
-          start: "2025-03-05T12:00:00+03:00",
-          end: "2025-03-06T10:15:00+03:00",
+          start: "2025-04-03T12:00:00+03:00",
+          end: "2025-04-04T10:15:00+03:00",
         },
+        deadline: DateTime.fromISO("2025-03-29T00:00:00+03:00").toMillis(),
       },
       {
         id: "4",
         label: "Следует визуально за первой задачей",
         resourceId: "1",
         time: {
-          start: "2025-03-05T09:00:00+03:00",
-          end: "2025-03-05T18:00:00+03:00",
+          start: "2025-04-02T09:00:00+03:00",
+          end: "2025-04-02T18:00:00+03:00",
         },
+        deadline: DateTime.fromISO("2025-03-29T00:00:00+03:00").toMillis(),
       },
       {
         id: "5",
         label: "На 3 дня",
         resourceId: "3",
         time: {
-          start: "2025-03-04T09:00:00+03:00",
-          end: "2025-03-06T18:00:00+03:00",
+          start: "2025-04-02T09:00:00+03:00",
+          end: "2025-04-04T18:00:00+03:00",
         },
+        deadline: DateTime.fromISO("2025-03-29T00:00:00+03:00").toMillis(),
       },
     ],
     onTaskChange: (task, opts) => {
