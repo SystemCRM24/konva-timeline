@@ -597,7 +597,7 @@ const Task = ({
           opacity={opacity}
           position="lx"
           taskId={taskId}
-          xCoordinate={-1}
+          xCoordinate={0}
         />
       )}
       {enableResize && (
@@ -609,7 +609,7 @@ const Task = ({
           opacity={opacity}
           position="rx"
           taskId={taskId}
-          xCoordinate={taskDimensions.width - taskHandlerBorder}
+          xCoordinate={taskDimensions.width - 3}
         />
       )}
       {displayTasksLabel && (

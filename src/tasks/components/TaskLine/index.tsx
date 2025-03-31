@@ -730,7 +730,7 @@ const TaskLine = ({
             opacity={opacity}
             position="rx"
             taskId={taskId}
-            xCoordinate={taskDimensions.width - 2 }
+            xCoordinate={taskDimensions.width - 3}
           />
         )}
         {displayTasksLabel && (
