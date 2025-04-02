@@ -2,7 +2,7 @@ import React, { CSSProperties, FC, useCallback, useEffect, useMemo, useRef, useS
 import { Layer, Rect, Stage } from "react-konva";
 import Konva from "konva";
 import { KonvaEventObject } from "konva/lib/Node";
-import { DateTime } from "luxon";
+import { DateTime, Interval } from "luxon";
 
 import { KonvaLine, KonvaText } from "../@konva";
 import GridLayer from "../grid/Layer";
@@ -52,7 +52,8 @@ const Timeline: FC<TimelineProps> = () => {
     externalRangeInMillis,
     showSummary,
     summaryWidth,
-    workTime
+    workTime,
+    now
   } = useTimelineContext();
 
   const [scrollbarSize, setScrollbarSize] = useState(0);
@@ -202,16 +203,6 @@ const Timeline: FC<TimelineProps> = () => {
   const xOfStart = useMemo(() => {
     const timeStart = DateTime.fromMillis(externalRangeInMillis.start);
     const startOffsetInUnit = timeStart.diff(interval.start!);
-    // console.log(startOffsetInUnit);
-    // WorkTime logic
-    // startOffsetInUnit = startOffsetInUnit.plus(
-    //   WorkTime.calcNonWorkDuration(
-    //     WorkTime.edgeInterval.start!,
-    //     interval.start!
-    //   )
-    // );
-    // Back to main
-    // console.log(startOffsetInUnit);
     const res = (startOffsetInUnit.as(resolution.unit) * columnWidth) / resolution.sizeInUnits;
     return res;
   }, [externalRangeInMillis, columnWidth, resolution, interval]);
@@ -324,6 +315,31 @@ const Timeline: FC<TimelineProps> = () => {
     return rowHeight * TASK_HEIGHT_OFFSET;
   }, [rowHeight]);
 
+  const [nowBlockX, setNowBlockX] = useState(0);
+
+  useEffect(
+    () => {
+      let nowInterval = null;
+      for ( const block of timeBlocks ) {
+        if ( block.contains(now) ) {
+          nowInterval = block;
+          break;
+        }
+      }
+      if ( nowInterval === null ) {
+        nowInterval = interval;
+      }
+      let endOffsetInUnit = nowInterval.start!.diff(interval.start!);
+      // WorkTime logic
+      const nonWorkTime = workTime.calcNonWorkDuration(nowInterval.start!, interval.start!)
+      endOffsetInUnit = endOffsetInUnit.minus(nonWorkTime);
+      // Back to main
+      const res = (endOffsetInUnit.as(resolution.unit) * columnWidth) / resolution.sizeInUnits;
+      nowBlockX != res && setNowBlockX(res);
+    },
+    [timeBlocks, now, interval, columnWidth, resolution, externalRangeInMillis]
+  );
+
   return (
     <div style={timelineWrapperStyle}>
       {!hideResources && (
@@ -341,7 +357,7 @@ const Timeline: FC<TimelineProps> = () => {
         </div>
       )}
       <div ref={wrapper} style={gridWrapperStyle}>
-        <div style={gridStageWrapperStyle}>
+        <div id="konva-main" now-x={nowBlockX} style={gridStageWrapperStyle}>
           <Stage
             ref={stageRef}
             height={stageHeight}
@@ -351,11 +367,6 @@ const Timeline: FC<TimelineProps> = () => {
             onMouseMove={onMouseMove}
           >
             <GridLayer height={stageHeight} />
-            <NowLine
-              rowHeight={rowHeight}
-              columnWidth={columnWidth}
-              stageHeight={stageHeight}
-            />
             {!enableLines ? (
               <TasksLayer
                 taskTooltip={taskTooltip}
