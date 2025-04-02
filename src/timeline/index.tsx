@@ -329,9 +329,10 @@ const Timeline: FC<TimelineProps> = () => {
       if ( nowInterval === null ) {
         nowInterval = interval;
       }
-      let endOffsetInUnit = nowInterval.start!.diff(interval.start!);
+      const today = nowInterval.start!.startOf('day');
+      let endOffsetInUnit = today.diff(interval.start!);
       // WorkTime logic
-      const nonWorkTime = workTime.calcNonWorkDuration(nowInterval.start!, interval.start!)
+      const nonWorkTime = workTime.calcNonWorkDuration(today, interval.start!)
       endOffsetInUnit = endOffsetInUnit.minus(nonWorkTime);
       // Back to main
       const res = (endOffsetInUnit.as(resolution.unit) * columnWidth) / resolution.sizeInUnits;
@@ -356,7 +357,7 @@ const Timeline: FC<TimelineProps> = () => {
           </Stage>
         </div>
       )}
-      <div id="konva-main" now-x={nowBlockX} ref={wrapper} style={gridWrapperStyle}>
+      <div id="konva-today" today-x={nowBlockX} ref={wrapper} style={gridWrapperStyle}>
         <div style={gridStageWrapperStyle}>
           <Stage
             ref={stageRef}
