@@ -1,4 +1,4 @@
-import React, { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, PropsWithChildren, useCallback, useContext, useDebugValue, useEffect, useMemo, useState } from "react";
 import { DateTime, Interval } from "luxon";
 
 import { addHeaderResource, Resource } from "../resources/utils/resources";
@@ -255,6 +255,8 @@ export const TimelineProvider = ({
 
   const [now, setNow] = useState(DateTime.local(zone));
   const [delay, setDelay] = useState(0);
+
+  useEffect(() => document.addEventListener('visibilitychange', () => !document.hidden && updateNow()), []);
 
   const updateNow = useCallback(
     () => {

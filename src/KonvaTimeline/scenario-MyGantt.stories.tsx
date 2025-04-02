@@ -34,10 +34,12 @@ const { resources } = generateStoryData({
 
 export const Line: Story = {
   args: {
+    enableDrag: false,
+    enableResize: false,
     onAreaSelect: undefined,
     resources,
     resolution: "1day",
-    enableLines: true,
+    enableLines: false,
     toolTip: true,
     displayTasksLabel: true,
     onTaskClick: (task) => task,
@@ -67,7 +69,7 @@ export const Line: Story = {
           start: "2025-04-03T09:30:00+03:00",
           end: "2025-04-03T12:00:00+03:00",
         },
-        deadline: DateTime.fromISO("2025-03-29T00:00:00+03:00").toMillis(),
+        deadline: "2025-04-04T00:00:00+03:00",
       },
       {
         id: "3",
@@ -87,7 +89,7 @@ export const Line: Story = {
           start: "2025-04-02T09:00:00+03:00",
           end: "2025-04-02T18:00:00+03:00",
         },
-        deadline: DateTime.fromISO("2025-03-29T00:00:00+03:00").toMillis(),
+        deadline: "2025-04-02T00:00:00+03:00",
       },
       {
         id: "5",

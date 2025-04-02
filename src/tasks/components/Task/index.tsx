@@ -109,7 +109,7 @@ const Task = ({
 
   const deadline = useMemo(
     () => {
-      return data.deadline < data.time.end ? data.deadline : data.time.end;
+      return Math.min(data.deadline as number, data.time.end as number);
     },
     [data]
   );
@@ -119,7 +119,7 @@ const Task = ({
       return DISABLED_TASK_DEFAULT_FILL;
     }
     try {
-      const taskColor = deadline as number > now.toMillis() ? fill : '#dc3545';
+      const taskColor = deadline > now.toMillis() ? fill : '#dc3545';
       const rgb = getRGB(taskColor);
       return ` rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
     } catch (error) {

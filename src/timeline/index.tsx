@@ -399,6 +399,11 @@ const Timeline: FC<TimelineProps> = () => {
                 />
               </Layer>
             )}
+            <NowLine
+              rowHeight={rowHeight}
+              columnWidth={columnWidth}
+              stageHeight={stageHeight}
+            />
           </Stage>
         </div>
       </div>
