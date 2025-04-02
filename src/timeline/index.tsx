@@ -356,8 +356,8 @@ const Timeline: FC<TimelineProps> = () => {
           </Stage>
         </div>
       )}
-      <div ref={wrapper} style={gridWrapperStyle}>
-        <div id="konva-main" now-x={nowBlockX} style={gridStageWrapperStyle}>
+      <div id="konva-main" now-x={nowBlockX} ref={wrapper} style={gridWrapperStyle}>
+        <div style={gridStageWrapperStyle}>
           <Stage
             ref={stageRef}
             height={stageHeight}
