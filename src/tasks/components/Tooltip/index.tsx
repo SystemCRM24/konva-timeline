@@ -29,18 +29,34 @@ const TaskTooltip: FC<TaskTooltipProps> = ({ task, x, y }) => {
     customToolTip,
     workTime
   } = useTimelineContext();
+  
   const {
     label,
+    description,
     completedPercentage,
     time: { start, end },
     resourceId,
   } = task;
+
+  const tooltipText = useMemo(
+    () => {
+      let text = label;
+      if ( description ) {
+        text += '\n' + description;
+      }
+      return text;
+    },
+    [label, description]
+  );
+
   const startDuration = useMemo(() => {
     return DateTime.fromMillis(Number(start)).toFormat("dd/MM/yyyy HH:mm:ss");
   }, [start]);
+
   const endDuration = useMemo(() => {
     return DateTime.fromMillis(Number(end)).toFormat("dd/MM/yyyy HH:mm:ss");
   }, [end]);
+
   const percentage = useMemo(() => {
     return completedPercentage + "%";
   }, [completedPercentage]);
@@ -95,7 +111,7 @@ const TaskTooltip: FC<TaskTooltipProps> = ({ task, x, y }) => {
         duration={duration}
         endDuration={endDuration}
         startDuration={startDuration}
-        label={label}
+        label={tooltipText}
         localized={localized}
         percentage={percentage}
         completedPercentage={completedPercentage}

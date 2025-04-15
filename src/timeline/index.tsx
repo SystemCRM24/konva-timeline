@@ -1,4 +1,4 @@
-import React, { CSSProperties, FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { CSSProperties, FC, useCallback, useDebugValue, useEffect, useMemo, useRef, useState } from "react";
 import { Layer, Rect, Stage } from "react-konva";
 import Konva from "konva";
 import { KonvaEventObject } from "konva/lib/Node";
@@ -357,7 +357,12 @@ const Timeline: FC<TimelineProps> = () => {
           </Stage>
         </div>
       )}
-      <div id="konva-today" today-x={nowBlockX} ref={wrapper} style={gridWrapperStyle}>
+      <div 
+        id="konva-today" 
+        today-x={nowBlockX} 
+        ref={wrapper} 
+        style={gridWrapperStyle}
+      >
         <div style={gridStageWrapperStyle}>
           <Stage
             ref={stageRef}

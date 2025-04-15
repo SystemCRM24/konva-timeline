@@ -14,6 +14,10 @@ export interface TaskData<T extends TimeRange = TimeRange> {
    */
   label: string;
   /**
+   * Description of the task
+   */
+  description?: string;
+  /**
    * Id of assigned resource
    */
   resourceId: string;
@@ -26,13 +30,13 @@ export interface TaskData<T extends TimeRange = TimeRange> {
    */
   time: T;
   /**
-   * Id of connected Tasks
-   */
-  relatedTasks?: string[];
-  /**
    * Deadline of this task
    */
   deadline: TimeInput;
+  /**
+   * Id of connected Tasks
+   */
+  relatedTasks?: string[];
 }
 
 type FilteredTasks = Operation<TaskData<InternalTimeRange>>;

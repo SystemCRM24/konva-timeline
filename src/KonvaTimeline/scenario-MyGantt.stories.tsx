@@ -34,12 +34,18 @@ const { resources } = generateStoryData({
 
 export const Line: Story = {
   args: {
-    enableDrag: false,
-    enableResize: false,
+    enableDrag: true,
+    enableResize: true,
     onAreaSelect: undefined,
     resources,
+    localized: {
+      start: 'Н',
+      end: 'К',
+      duration: 'Д',
+      completed: 'З'
+    },
     resolution: "1day",
-    enableLines: false,
+    enableLines: true,
     toolTip: true,
     displayTasksLabel: true,
     onTaskClick: (task) => task,
@@ -57,7 +63,7 @@ export const Line: Story = {
         resourceId: "1",
         time: {
           start: "2025-03-28T09:00:00+03:00",
-          end: "2025-03-28T10:54:00+03:00",
+          end: "2025-04-01T10:54:00+03:00",
         },
         deadline: "2025-03-29T00:00:00+03:00",
       },
@@ -83,7 +89,8 @@ export const Line: Story = {
       },
       {
         id: "4",
-        label: "Следует визуально за первой задачей",
+        label: "РА-00000979",
+        description: 'Бехтер Илья Валерьевич',
         resourceId: "1",
         time: {
           start: "2025-04-02T09:00:00+03:00",

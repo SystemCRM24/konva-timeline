@@ -745,6 +745,18 @@ const TaskLine = ({
             y={textOffsets - offsetPercentageY}
           />
         )}
+        {displayTasksLabel && data.description && (
+          <KonvaText
+            fill={completedPercentage === 0 ? "black" : textStroke}
+            ellipsis
+            fontSize={textSize}
+            text={data.description}
+            width={textWidth}
+            wrap="none"
+            x={textOffsets}
+            y={textOffsets + 5}
+          />
+        )}
       </Group>
       <Group>
         {backLine && anchorPointBack && (
