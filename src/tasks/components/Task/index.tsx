@@ -114,18 +114,24 @@ const Task = ({
     [data]
   );
 
+  const taskFill = useMemo(
+    () => {
+      return deadline > now.toMillis() ? fill : '#dc3545'
+    },
+    [fill, deadline, now]
+  );
+
   const mainColor = useMemo(() => {
     if (disabled) {
       return DISABLED_TASK_DEFAULT_FILL;
     }
     try {
-      const taskColor = deadline > now.toMillis() ? fill : '#dc3545';
-      const rgb = getRGB(taskColor);
+      const rgb = getRGB(taskFill);
       return ` rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
     } catch (error) {
       return INVALIDFILL_TASK_DEFAULT_FILL;
     }
-  }, [fill, disabled, deadline, now]);
+  }, [fill, disabled, taskFill]);
 
   const mainStroke = useMemo(() => {
     if (disabled) {
@@ -343,11 +349,11 @@ const Task = ({
 
   const textStroke = useMemo(() => {
     try {
-      return getContrastColor(fill);
+      return getContrastColor(taskFill);
     } catch (error) {
       return "rgb(0,0,0)";
     }
-  }, [fill]);
+  }, [taskFill]);
 
   const textWidth = useMemo(() => taskDimensions.width - textOffsets * 2, [taskDimensions, textOffsets]);
 
