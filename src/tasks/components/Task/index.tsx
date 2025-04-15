@@ -629,7 +629,7 @@ const Task = ({
           fill={completedPercentage === 0 ? "black" : textStroke}
           ellipsis
           fontSize={textSize}
-          text={"data.description"}
+          text={data.description}
           width={textWidth}
           wrap="none"
           x={textOffsets}
