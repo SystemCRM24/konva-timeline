@@ -90,7 +90,7 @@ export const Line: Story = {
       {
         id: "4",
         label: "РА-00000979",
-        description: 'Бехтер Илья Валерьевич',
+        description: 'Бехтер Илья Валерьевич Бехтер Илья Валерьевич',
         resourceId: "1",
         time: {
           start: "2025-04-02T09:00:00+03:00",

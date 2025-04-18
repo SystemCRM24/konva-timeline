@@ -117,7 +117,7 @@ const TaskTooltip: FC<TaskTooltipProps> = ({ task, x, y }) => {
         completedPercentage={completedPercentage}
       />
     ) : (
-      <div style={{ minWidth: 190, maxWidth: 201, minHeight: 90, maxHeight: 101, overflow: "hidden" }}>
+      <div style={{ minWidth: 190, maxWidth: 251, minHeight: 90, maxHeight: 101, overflow: "hidden" }}>
         {customToolTip(customToolTipData)}
       </div>
     );

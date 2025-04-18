@@ -30,7 +30,7 @@ const DefaultToolTip: FC<DefaultToolTip> = ({
         borderWidth: "1px",
         padding: 8,
         boxShadow: "2px 2px 8px black",
-        maxWidth: 200,
+        maxWidth: 251,
         overflow: "hidden",
         textOverflow: "ellipsis",
       }}
